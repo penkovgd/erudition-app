@@ -1,0 +1,1195 @@
+Prefix: owl: <http://www.w3.org/2002/07/owl#>
+Prefix: rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+Prefix: rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+Prefix: skos: <http://www.w3.org/2004/02/skos/core#>
+Prefix: xml: <http://www.w3.org/XML/1998/namespace>
+Prefix: xsd: <http://www.w3.org/2001/XMLSchema#>
+
+
+
+Ontology: <https://github.com/penkovgd/erudition-app/ontology>
+
+
+AnnotationProperty: rdfs:comment
+
+    
+AnnotationProperty: rdfs:label
+
+    
+Datatype: rdf:PlainLiteral
+
+    
+Datatype: xsd:anyURI
+
+    
+Datatype: xsd:boolean
+
+    
+Datatype: xsd:dateTime
+
+    
+Datatype: xsd:decimal
+
+    
+Datatype: xsd:int
+
+    
+Datatype: xsd:integer
+
+    
+Datatype: xsd:string
+
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>
+
+    Annotations: 
+        rdfs:comment "Вопрос имеет пространтсво ответов (как верные, так и неверные)"@ru,
+        rdfs:label "hasAnswer"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#Question>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#Answer>
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>
+
+    Annotations: 
+        rdfs:comment "Ответ состоит из вариатов ответа (кусочков). Пример: 
+для MCQ: ответ состоит из одного варианта ответа
+для Ordered: ответ состоит из упорядоченных вариантов ответа
+для Matching: ответ состоит из пар вариантов ответа."@ru,
+        rdfs:label "hasAnswerEntry"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#Answer>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasConcept>
+
+    Annotations: 
+        rdfs:label "has Concept"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>,
+        <https://github.com/penkovgd/erudition-app/ontology#Question>
+    
+    Range: 
+        skos:Concept
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasLeftAnswerEntry>
+
+    Annotations: 
+        rdfs:comment "Вариант ответа в виде пары имеет левую и правую части - варианты ответов (кусочки)"@ru,
+        rdfs:label "hasLeftAnswerEntry"@en
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasPairAnswerEntries>
+
+    Annotations: 
+        rdfs:comment "Ответ на сопоставление состоит из пар варианто ответа"@ru,
+        rdfs:label "hasPairAnswerEntries"@en
+    
+    SubPropertyOf: 
+        owl:topObjectProperty
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#MatchingAnswer>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasPeriod>
+
+    Annotations: 
+        rdfs:label "has Period"@en
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasConcept>
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        skos:Concept
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasPlace>
+
+    Annotations: 
+        rdfs:label "has Place"@en
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasConcept>
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        skos:Concept
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasQuestion>
+
+    Annotations: 
+        rdfs:comment "Квиз состоит из вопросов"@ru,
+        rdfs:label "hasQuestion"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#Quiz>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#Question>
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasRightAnswerEntry>
+
+    Annotations: 
+        rdfs:comment "Вариант ответа в виде пары имеет левую и правую части - варианты ответов (кусочки)"@ru,
+        rdfs:label "hasRightAnswerEntry"@en
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasSphere>
+
+    Annotations: 
+        rdfs:label "has Sphere"@en
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasConcept>
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        skos:Concept
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#hasStyle>
+
+    Annotations: 
+        rdfs:label "has Style"@en
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasConcept>
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        skos:Concept
+    
+    
+ObjectProperty: <https://github.com/penkovgd/erudition-app/ontology#refersToKnowledgeItem>
+
+    Annotations: 
+        rdfs:comment "Связка между вариантом ответа (1703) и Знанием (Санкт-Петербург)"@ru,
+        rdfs:label "refersToKnowledgeItem"@en
+    
+    SubPropertyOf: 
+        owl:topObjectProperty
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    Range: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    
+ObjectProperty: owl:topObjectProperty
+
+    
+ObjectProperty: skos:broader
+
+    Annotations: 
+        rdfs:label "has broader"@en
+    
+    
+ObjectProperty: skos:inScheme
+
+    Annotations: 
+        rdfs:label "is in scheme"@en
+    
+    Range: 
+        skos:ConceptScheme
+    
+    
+ObjectProperty: skos:narrower
+
+    Annotations: 
+        rdfs:label "has narrower"^^xsd:string
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasAuthor>
+
+    Annotations: 
+        rdfs:label "hasAuthor"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:string
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasDate>
+
+    Annotations: 
+        rdfs:label "hasDate"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:string
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasEndDate>
+
+    Annotations: 
+        rdfs:label "hasEndDate"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:dateTime
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasImage>
+
+    Annotations: 
+        rdfs:label "hasImage"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:anyURI
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:string
+    
+    SubPropertyOf: 
+        owl:topDataProperty
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasName>
+
+    Annotations: 
+        rdfs:label "hasName"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:string
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasPosition>
+
+    Annotations: 
+        rdfs:label "hasPosition"@en
+    
+    Range: 
+        xsd:int
+    
+    SubPropertyOf: 
+        owl:topDataProperty
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasQuestionText>
+
+    Annotations: 
+        rdfs:label "hasQuestionText"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#Question>
+    
+    Range: 
+        xsd:string
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#hasStartDate>
+
+    Annotations: 
+        rdfs:label "hasStartDate"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    Range: 
+        xsd:dateTime
+    
+    SubPropertyOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasKnowledgeAttribute>
+    
+    
+DataProperty: <https://github.com/penkovgd/erudition-app/ontology#isCorrect>
+
+    Annotations: 
+        rdfs:label "isCorrect"@en
+    
+    Domain: 
+        <https://github.com/penkovgd/erudition-app/ontology#Answer>
+    
+    Range: 
+        xsd:boolean
+    
+    SubPropertyOf: 
+        owl:topDataProperty
+    
+    
+DataProperty: owl:topDataProperty
+
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Answer>
+
+    Annotations: 
+        rdfs:label "Answer"@en,
+        rdfs:label "Ответ"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#isCorrect> some xsd:boolean
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+
+    Annotations: 
+        rdfs:comment "Минимальная единица варианта/элемента ответа
+По сути, это атрибут знания (по идее).
+Пример: Париж, 1812, *Картинка*"^^xsd:string,
+        rdfs:label "Answer Entry"@en,
+        rdfs:label "Вариант Ответа"@ru
+    
+    SubClassOf: 
+        owl:Thing,
+        <https://github.com/penkovgd/erudition-app/ontology#refersToKnowledgeItem> some <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Artifact>
+
+    Annotations: 
+        rdfs:comment "то, что создал человек. пр: Картина, Изобретение, Дом"^^xsd:string,
+        rdfs:label "Artifact"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Event>
+
+    Annotations: 
+        rdfs:label "Event"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+
+    Annotations: 
+        rdfs:comment "Сущность с wikidata. Пример: Мона Лиза, Транзистор, Эверест"@ru,
+        rdfs:label "Knowledge Item"@en,
+        rdfs:label "Знание"@ru
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>
+
+    Annotations: 
+        rdfs:label "MCQAnswer"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#Answer>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry> some <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#MatchingAnswer>
+
+    Annotations: 
+        rdfs:label "MatchingAnswer"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#Answer>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasPairAnswerEntries> some <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#MatchingQuestion>
+
+    Annotations: 
+        rdfs:label "Matching Question"@en,
+        rdfs:label "Вопрос на сопоставление"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#Question>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswer> some <https://github.com/penkovgd/erudition-app/ontology#MatchingAnswer>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#MultipleChoiceQuestion>
+
+    Annotations: 
+        rdfs:label "Multiple Choice Question"@en,
+        rdfs:label "Вопрос с выбором ответа"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#Question>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswer> some <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswer>
+
+    Annotations: 
+        rdfs:label "OrderedAnswer"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#Answer>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry> some <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswerEntry>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswerEntry>
+
+    Annotations: 
+        rdfs:label "Ordered Answer Entry"@en,
+        rdfs:label "Вариант ответа с порядковым номером"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasPosition> some xsd:int
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#OrderedQuestion>
+
+    Annotations: 
+        rdfs:label "Ordered Question"@en,
+        rdfs:label "Вопрос на упорядочивание"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#Question>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswer> some <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswer>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+
+    Annotations: 
+        rdfs:comment "Пример: Франция - Париж, Картинка - Название картины"@ru,
+        rdfs:label "Pair Answer Entries"@en,
+        rdfs:label "Пара как вариант ответа"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasLeftAnswerEntry> some <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasRightAnswerEntry> some <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Person>
+
+    Annotations: 
+        rdfs:label "Person"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Place>
+
+    Annotations: 
+        rdfs:label "Place"@en
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#KnowledgeItem>
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Question>
+
+    Annotations: 
+        rdfs:label "Question"@en,
+        rdfs:label "Вопрос"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasAnswer> some <https://github.com/penkovgd/erudition-app/ontology#Answer>,
+        <https://github.com/penkovgd/erudition-app/ontology#hasQuestionText> some xsd:string
+    
+    
+Class: <https://github.com/penkovgd/erudition-app/ontology#Quiz>
+
+    Annotations: 
+        rdfs:label "Quiz"@en,
+        rdfs:label "Квиз"@ru
+    
+    SubClassOf: 
+        <https://github.com/penkovgd/erudition-app/ontology#hasQuestion> some <https://github.com/penkovgd/erudition-app/ontology#Question>
+    
+    
+Class: owl:Thing
+
+    
+Class: skos:Concept
+
+    Annotations: 
+        rdfs:comment "Тема классификации: фасет составляет концепты: Период - Возрождение, 19 век, Средневековье (Концепты)"^^xsd:string,
+        rdfs:label "Concept"@en,
+        rdfs:label "Концепт"@ru
+    
+    
+Class: skos:ConceptScheme
+
+    Annotations: 
+        rdfs:label "Concept Scheme"@en,
+        rdfs:label "Схема концептов (Фасет)"^^xsd:string
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%93%D0%B5%D1%80%D0%BC%D0%B0%D0%BD%D0%B8%D1%8F%28answerEntry%29>
+
+    Annotations: 
+        rdfs:label "Леонардо да Винчи (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#refersToKnowledgeItem>  <https://github.com/penkovgd/erudition-app/ontology#MonaLisa>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%93%D0%B5%D1%80%D0%BC%D0%B0%D0%BD%D0%B8%D1%8F-%D0%91%D0%B5%D1%80%D0%BB%D0%B8%D0%BD>
+
+    Annotations: 
+        rdfs:label "Германия - Берлин"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasLeftAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Германия_(answer_entry)>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasRightAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Берлин_(answer_entry)>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F%28answerEntry%29>
+
+    Annotations: 
+        rdfs:label "Рафаэль (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F-%D0%9C%D0%B0%D0%B4%D1%80%D0%B8%D0%B4>
+
+    Annotations: 
+        rdfs:label "Испания - Мадрид"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasLeftAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Испания_(answer_entry)>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasRightAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Мадрид_(answer_entry)>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%82%D0%B0%D0%BB%D0%B8%D1%8F%28answerEntry%29>
+
+    Annotations: 
+        rdfs:label "Микеланджело (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%82%D0%B0%D0%BB%D0%B8%D1%8F-%D0%A0%D0%B8%D0%BC>
+
+    Annotations: 
+        rdfs:label "Италия - Рим"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasLeftAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Италия_(answer_entry)>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasRightAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Рим_(answer_entry)>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%A4%D1%80%D0%B0%D0%BD%D1%86%D0%B8%D1%8F%28answerEntry%29>
+
+    Annotations: 
+        rdfs:label "Донателло (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#%D0%A4%D1%80%D0%B0%D0%BD%D1%86%D0%B8%D1%8F-%D0%9F%D0%B0%D1%80%D0%B8%D0%B6>
+
+    Annotations: 
+        rdfs:label "Франция - Париж"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#PairAnswerEntries>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasLeftAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Франция_(answer_entry)>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasRightAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Париж_(answer_entry)>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#19thCentury>
+
+    Annotations: 
+        rdfs:label "19th Centiry"@en,
+        rdfs:label "19й Век"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PeriodScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Art>
+
+    Annotations: 
+        rdfs:label "Art"@en,
+        rdfs:label "Искусство"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#SphereScheme>,
+     skos:narrower  <https://github.com/penkovgd/erudition-app/ontology#Painting>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Cubism>
+
+    Annotations: 
+        rdfs:label "Cubism"@en,
+        rdfs:label "Кубизм"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#StyleScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Europe>
+
+    Annotations: 
+        rdfs:label "Europe"@en,
+        rdfs:label "Европа"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PlaceScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#France>
+
+    Annotations: 
+        rdfs:label "France"@en,
+        rdfs:label "Франция"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:broader  <https://github.com/penkovgd/erudition-app/ontology#Europe>,
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PlaceScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Geography>
+
+    Annotations: 
+        rdfs:label "Geography"@en,
+        rdfs:label "География"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#SphereScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Italy>
+
+    Annotations: 
+        rdfs:label "Itally"@en,
+        rdfs:label "Италия"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:broader  <https://github.com/penkovgd/erudition-app/ontology#Europe>,
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PlaceScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#MiddleAges>
+
+    Annotations: 
+        rdfs:label "Middle Ages"@en,
+        rdfs:label "Средневековье"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PeriodScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#MonaLisa>
+
+    Annotations: 
+        rdfs:label "Mona Lisa"@en,
+        rdfs:label "Мона Лиза"@ru
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#Artifact>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasPeriod>  <https://github.com/penkovgd/erudition-app/ontology#Renaissance>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasPlace>  <https://github.com/penkovgd/erudition-app/ontology#Italy>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasSphere>  <https://github.com/penkovgd/erudition-app/ontology#Painting>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasStyle>  <https://github.com/penkovgd/erudition-app/ontology#Post-Impressionism>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAuthor>  "Leonardo Da Vinci"^^xsd:string,
+     <https://github.com/penkovgd/erudition-app/ontology#hasDate>  "1500s"^^xsd:string,
+     <https://github.com/penkovgd/erudition-app/ontology#hasImage>  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_natural_color.jpg/500px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_natural_color.jpg"^^xsd:string
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Painting>
+
+    Annotations: 
+        rdfs:label "Painting"@en,
+        rdfs:label "Живопись"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:broader  <https://github.com/penkovgd/erudition-app/ontology#Art>,
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#SphereScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#PeriodScheme>
+
+    Annotations: 
+        rdfs:comment "характеристика, деляющая на:
+век, эпоха, и конкретные периоды вроде \"Серебряный век\""@ru,
+        rdfs:label "Period Scheme"@en,
+        rdfs:label "Период (Фасет)"@ru
+    
+    Types: 
+        skos:ConceptScheme
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#PlaceScheme>
+
+    Annotations: 
+        rdfs:comment "характеристика, указывающая место происхождения (страну)"@ru,
+        rdfs:label "Place Scheme"@en,
+        rdfs:label "Место (Фасет)"@ru
+    
+    Types: 
+        skos:ConceptScheme
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Post-Impressionism>
+
+    Annotations: 
+        rdfs:label "Post-Impressionism"@en,
+        rdfs:label "Пост-импрессионизм"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#StyleScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Renaissance>
+
+    Annotations: 
+        rdfs:label "Renaissance"@en,
+        rdfs:label "Эпоха Возрождения"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PeriodScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Russia>
+
+    Annotations: 
+        rdfs:label "Russia"@en,
+        rdfs:label "Россия"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:broader  <https://github.com/penkovgd/erudition-app/ontology#Europe>,
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#PlaceScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Sci-Tech>
+
+    Annotations: 
+        rdfs:label "Science & Technology"@en,
+        rdfs:label "Наука и Технологии"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#SphereScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#SphereScheme>
+
+    Annotations: 
+        rdfs:comment "характеристика, делящая на сферы:
+география, наука, живопись и т.д."@ru,
+        rdfs:label "Schere Scheme"@en,
+        rdfs:label "Сфера Знаний (Фасет)"@ru
+    
+    Types: 
+        skos:ConceptScheme
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Sport>
+
+    Annotations: 
+        rdfs:label "Sport"@en,
+        rdfs:label "Спорт"@ru
+    
+    Types: 
+        skos:Concept
+    
+    Facts:  
+     skos:inScheme  <https://github.com/penkovgd/erudition-app/ontology#SphereScheme>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#StyleScheme>
+
+    Annotations: 
+        rdfs:comment "характеристика, делящая на:
+романтизм, кубизм и т.д."@ru,
+        rdfs:label "Style Scheme"@en,
+        rdfs:label "Стиль (Фасет)"@ru
+    
+    Types: 
+        skos:ConceptScheme
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q1>
+
+    Annotations: 
+        rdfs:label "q1 (MCQ)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MultipleChoiceQuestion>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#q1RightAnswer>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#q1WrongAnswer1>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#q1WrongAnswer2>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#q1WrongAnswer3>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasSphere>  <https://github.com/penkovgd/erudition-app/ontology#Painting>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasQuestionText>  "Кто написал картину \"Мона Лиза\"?"
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q1RightAnswer>
+
+    Annotations: 
+        rdfs:label "q1 right answer"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#%D0%93%D0%B5%D1%80%D0%BC%D0%B0%D0%BD%D0%B8%D1%8F%28answerEntry%29>,
+     <https://github.com/penkovgd/erudition-app/ontology#isCorrect>  true
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q1WrongAnswer1>
+
+    Annotations: 
+        rdfs:label "q1 wrong answer 1"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F%28answerEntry%29>,
+     <https://github.com/penkovgd/erudition-app/ontology#isCorrect>  false
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q1WrongAnswer2>
+
+    Annotations: 
+        rdfs:label "q1 wrong answer 2"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%82%D0%B0%D0%BB%D0%B8%D1%8F%28answerEntry%29>,
+     <https://github.com/penkovgd/erudition-app/ontology#isCorrect>  false
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q1WrongAnswer3>
+
+    Annotations: 
+        rdfs:label "q1 wrong answer 3"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#%D0%A4%D1%80%D0%B0%D0%BD%D1%86%D0%B8%D1%8F%28answerEntry%29>,
+     <https://github.com/penkovgd/erudition-app/ontology#isCorrect>  false
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q2%28Matching%29>
+
+    Annotations: 
+        rdfs:label "q2 (Matching)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MatchingQuestion>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#q2RightAnswer>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasSphere>  <https://github.com/penkovgd/erudition-app/ontology#Geography>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasQuestionText>  "Сопоставьте страны и их столицы"
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q2RightAnswer>
+
+    Annotations: 
+        rdfs:label "q2 right answer"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#MatchingAnswer>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasPairAnswerEntries>  <https://github.com/penkovgd/erudition-app/ontology#%D0%93%D0%B5%D1%80%D0%BC%D0%B0%D0%BD%D0%B8%D1%8F-%D0%91%D0%B5%D1%80%D0%BB%D0%B8%D0%BD>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasPairAnswerEntries>  <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F-%D0%9C%D0%B0%D0%B4%D1%80%D0%B8%D0%B4>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasPairAnswerEntries>  <https://github.com/penkovgd/erudition-app/ontology#%D0%98%D1%82%D0%B0%D0%BB%D0%B8%D1%8F-%D0%A0%D0%B8%D0%BC>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasPairAnswerEntries>  <https://github.com/penkovgd/erudition-app/ontology#%D0%A4%D1%80%D0%B0%D0%BD%D1%86%D0%B8%D1%8F-%D0%9F%D0%B0%D1%80%D0%B8%D0%B6>,
+     <https://github.com/penkovgd/erudition-app/ontology#isCorrect>  true
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q3%28Ordering%29>
+
+    Annotations: 
+        rdfs:label "q3 (Ordering)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#OrderedQuestion>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswer>  <https://github.com/penkovgd/erudition-app/ontology#q3RightAnswer>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasSphere>  <https://github.com/penkovgd/erudition-app/ontology#Geography>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasQuestionText>  "Расположите горы в порядке возрастания высоты"
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#q3RightAnswer>
+
+    Annotations: 
+        rdfs:label "q3 right answer"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswer>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#К2_-_3>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Килиманджаро_-_2>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Эверест_-_4>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasAnswerEntry>  <https://github.com/penkovgd/erudition-app/ontology#Эльбрус_-_1>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#quiz1>
+
+    Annotations: 
+        rdfs:label "quiz1"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#Quiz>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasQuestion>  <https://github.com/penkovgd/erudition-app/ontology#q1>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasQuestion>  <https://github.com/penkovgd/erudition-app/ontology#q2%28Matching%29>,
+     <https://github.com/penkovgd/erudition-app/ontology#hasQuestion>  <https://github.com/penkovgd/erudition-app/ontology#q3%28Ordering%29>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Берлин_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Берлин (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Германия_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Германия (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Испания_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Испания (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Италия_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Италия (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#К2_-_3>
+
+    Annotations: 
+        rdfs:label "K2 - 3"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswerEntry>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasPosition>  3
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Килиманджаро_-_2>
+
+    Annotations: 
+        rdfs:label "Килиманджаро - 2"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswerEntry>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasPosition>  2
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Мадрид_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Мадрид (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Париж_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Париж (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Рим_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Рим (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Франция_(answer_entry)>
+
+    Annotations: 
+        rdfs:label "Франция (answer entry)"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#AnswerEntry>
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Эверест_-_4>
+
+    Annotations: 
+        rdfs:label "Эверест - 4"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswerEntry>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasPosition>  4
+    
+    
+Individual: <https://github.com/penkovgd/erudition-app/ontology#Эльбрус_-_1>
+
+    Annotations: 
+        rdfs:label "Эльбрус - 1"@en
+    
+    Types: 
+        <https://github.com/penkovgd/erudition-app/ontology#OrderedAnswerEntry>
+    
+    Facts:  
+     <https://github.com/penkovgd/erudition-app/ontology#hasPosition>  1
+    
+    
+DisjointClasses: 
+    <https://github.com/penkovgd/erudition-app/ontology#Artifact>,<https://github.com/penkovgd/erudition-app/ontology#Event>,<https://github.com/penkovgd/erudition-app/ontology#Person>,<https://github.com/penkovgd/erudition-app/ontology#Place>
+
+DisjointClasses: 
+    <https://github.com/penkovgd/erudition-app/ontology#MCQAnswer>,<https://github.com/penkovgd/erudition-app/ontology#MatchingAnswer>,<https://github.com/penkovgd/erudition-app/ontology#OrderedAnswer>
