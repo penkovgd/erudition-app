@@ -1,3 +1,5 @@
+// Package main for the knowledge service.
+// knowledge is responsible for collecting data from wikidata.org and storing it in a graph database (neo4j)
 package main
 
 import (
@@ -11,7 +13,7 @@ import (
 	"time"
 
 	"github.com/penkovgd/erudition-app/pkg/logger"
-	neo4jClient "github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/neo4j"
+	neo4jAdapter "github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/neo4j"
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -33,7 +35,7 @@ func run(cfg config.Config, log *slog.Logger) error {
 	ctx := context.Background()
 
 	// Neo4j Client
-	neo4j, err := neo4jClient.New(ctx, log, cfg.Neo4j.URI, cfg.Neo4j.Username, cfg.Neo4j.Password)
+	neo4j, err := neo4jAdapter.New(ctx, log, cfg.Neo4j.URI, cfg.Neo4j.Username, cfg.Neo4j.Password)
 	if err != nil {
 		return fmt.Errorf("create neo4j client: %w", err)
 	}

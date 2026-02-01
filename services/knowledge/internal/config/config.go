@@ -1,3 +1,4 @@
+// Package config is responsible for loading app's configuration from .env files
 package config
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
+// Config holds configs for logger, gRPC server, connection to Neo4j database
 type Config struct {
 	LogLevel string `envconfig:"LOG_LEVEL"`
 
@@ -23,6 +25,7 @@ type Config struct {
 	} `envconfig:"NEO4J"`
 }
 
+// MustLoad loads config, if fails - panics
 func MustLoad() Config {
 	var cfg Config
 
@@ -33,6 +36,7 @@ func MustLoad() Config {
 	return cfg
 }
 
+// GRPCAddress returns gRPC address in format: <host>:<port>
 func (c *Config) GRPCAddress() string {
 	return fmt.Sprintf("%s:%d", c.GRPC.Host, c.GRPC.Port)
 }

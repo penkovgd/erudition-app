@@ -1,3 +1,4 @@
+// Package logger is responsible for creating a custom logger for all microservices
 package logger
 
 import (
@@ -5,6 +6,7 @@ import (
 	"os"
 )
 
+// New creates a new slog logger with provided configuration
 func New(logLevel string) *slog.Logger {
 	var level slog.Level
 	switch logLevel {
