@@ -1,0 +1,7 @@
+*
+!go.work
+!go.work.sum
+!pkg/
+!services/
+!api/
+!compose.yaml

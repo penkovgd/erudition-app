@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+package knowledge;
+
+option go_package = "github.com/penkovgd/erudition-app/pkg/gen/knowledge";
+
