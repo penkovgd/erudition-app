@@ -3,7 +3,7 @@ tools:
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	go install github.com/yoheimuta/protolint/cmd/protolint@latest
 	go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $$(go env GOPATH)/bin v2.4.0
 	@echo "checking protobuf compiler, if it fails follow guide at https://protobuf.dev/installation/"
 	@which -s protoc && echo OK || exit 1
 
