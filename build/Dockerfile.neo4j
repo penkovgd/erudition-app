@@ -1,0 +1,9 @@
+FROM neo4j:5.26-community
+
+USER root
+
+ADD https://github.com/neo4j-labs/neosemantics/releases/download/5.26.0/neosemantics-5.26.0.jar $NEO4J_HOME/plugins/
+
+RUN chmod 644 $NEO4J_HOME/plugins/neosemantics-5.26.0.jar
+
+USER neo4j
