@@ -48,3 +48,5 @@
 # */gen/
 
 secrets
+requests
+todo.md
