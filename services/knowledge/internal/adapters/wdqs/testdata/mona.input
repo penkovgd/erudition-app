@@ -1,0 +1,15 @@
+CONSTRUCT {
+  wd:Q12418 rdf:type wd:Q3305213.
+  wd:Q12418 rdfs:label ?paintingLabel.
+  wd:Q12418 wdt:P571 ?year.
+  wd:Q12418 wdt:P170 ?author.
+  wd:Q12418 wdt:P18 ?image.
+}
+WHERE {
+  wd:Q12418 wdt:P31 wd:Q3305213;
+    wdt:P571 ?year;
+    wdt:P170 ?author;
+    wdt:P18 ?image.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "ru". }
+}
+LIMIT 1

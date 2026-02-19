@@ -9,7 +9,10 @@ require (
 	google.golang.org/grpc v1.78.0
 )
 
+require github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
+
 require (
+	github.com/piprate/json-gold v0.7.0
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
