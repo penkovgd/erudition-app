@@ -66,7 +66,7 @@ services:
         
         if [ $$CONFIG_EXISTS -eq 0 ]; then
           echo 'Graph is empty, running n10s.graphconfig.init()...'
-          cypher-shell -a neo4j://neo4j:7687 -u $$USER -p $$PASS 'CALL n10s.graphconfig.init();'
+          cypher-shell -a neo4j://neo4j:7687 -u $$USER -p $$PASS 'CALL n10s.graphconfig.init({handleVocabUris: \"MAP\", applyNeo4jNaming: true});'
         else
           echo 'n10s is already prepared, skipping.'
         fi
