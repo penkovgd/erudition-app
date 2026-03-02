@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -15,7 +17,7 @@ import (
 	"github.com/penkovgd/erudition-app/pkg/testutils"
 	n4jc "github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/neo4j"
 	"github.com/stretchr/testify/assert"
-	"github.com/testcontainers/testcontainers-go"
+	tc "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
@@ -25,9 +27,19 @@ func prepare(t *testing.T) *n4jc.Client {
 
 	ctx := context.Background()
 
-	neo4jC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: testcontainers.ContainerRequest{
-			Image:        "erudition-app-neo4j:latest",
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("could not get current file path")
+	}
+	projectRoot := filepath.Join(filepath.Dir(filename), "../../../../..")
+
+	neo4jC, err := tc.GenericContainer(ctx, tc.GenericContainerRequest{
+		ContainerRequest: tc.ContainerRequest{
+			FromDockerfile: tc.FromDockerfile{
+				Context:    projectRoot,
+				Dockerfile: "build/Dockerfile.neo4j",
+				Tag:        "erudition-app-neo4j",
+			},
 			ExposedPorts: []string{"7687/tcp", "7474/tcp"},
 			Env: map[string]string{
 				"NEO4J_AUTH":    "neo4j/testpassword",
@@ -64,7 +76,7 @@ func prepare(t *testing.T) *n4jc.Client {
 
 	t.Cleanup(func() {
 		client.Close(ctx)
-		testcontainers.CleanupContainer(t, neo4jC)
+		tc.CleanupContainer(t, neo4jC)
 	})
 
 	return client
