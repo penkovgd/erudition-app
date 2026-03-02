@@ -4,24 +4,13 @@ import (
 	"context"
 )
 
-// import "context"
-
-// type Storage interface {
-// 	Save(context.Context)
-// }
-
-//type Wikidata interface {
-//	GetKnowledgeItems(ctx context.Context, sparql string) ([]models.KnowledgeItem, error)
-//}
-
 // Extractor extracts knowledge from external sources like wikidata
 type Extractor interface {
 	Extract(ctx context.Context, sparql string) (JSONLD, error)
 }
 
-// type Transformer interface {
-// 	Transform(ctx context.Context, jsonld JSONLD) (JSONLD, error)
-// }s
+// Transformer transforms serialized jsonld (i.e. normalization) and returns serialized jsonld
+type Transformer func(ctx context.Context, jsonld JSONLD) (JSONLD, error)
 
 // Loader loads knowledge into the knowledge graph
 type Loader interface {

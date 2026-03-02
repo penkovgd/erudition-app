@@ -4,8 +4,9 @@ package core
 // JSONLD is a type for json-ld rdf data
 type JSONLD []byte
 
-// Topic represents a topic in the knowledge graph
+// Topic is a collection of knowledge and questions that are united by a single theme (example: Italian Renaissance painting)
 type Topic struct {
-	// name   string
+	// Name   string
+	// Desc string
 	Sparql string
 }
