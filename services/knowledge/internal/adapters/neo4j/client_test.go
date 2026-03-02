@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/go-jose/go-jose/v4/testutils/require"
 	"github.com/google/go-cmp/cmp"
@@ -47,7 +48,10 @@ func prepare(t *testing.T) *n4jc.Client {
 				"NEO4J_server_unmanaged__extension__classes":  "n10s.endpoint=/rdf",
 				"NEO4J_dbms_security_procedures_unrestricted": "apoc.*,n10s.*",
 			},
-			WaitingFor: wait.ForListeningPort("7687/tcp"),
+			WaitingFor: wait.ForAll(
+				wait.ForListeningPort("7687/tcp"),
+				wait.ForLog("Started."),
+			).WithDeadline(60 * time.Second),
 		},
 		Started: true,
 	})
