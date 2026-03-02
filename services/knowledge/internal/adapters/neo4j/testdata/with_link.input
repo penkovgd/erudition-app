@@ -1,0 +1,6 @@
+{
+  "@id": "http://example.com/doc/1",
+  "http://example.com/cites": {
+    "@id": "http://example.com/doc/2"
+  }
+}

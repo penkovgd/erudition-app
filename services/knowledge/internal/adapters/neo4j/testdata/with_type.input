@@ -1,0 +1,4 @@
+{
+  "@id": "http://example.com/person/1",
+  "@type": "http://schema.org/Person"
+}

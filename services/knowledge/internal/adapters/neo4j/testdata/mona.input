@@ -1,0 +1,24 @@
+[
+    {
+        "@id": "http://www.wikidata.org/entity/Q12418",
+        "@type": [
+            "http://www.wikidata.org/entity/Q3305213"
+        ],
+        "http://www.wikidata.org/prop/direct/P170": [
+            {
+                "@id": "http://www.wikidata.org/entity/Q762"
+            }
+        ],
+        "http://www.wikidata.org/prop/direct/P18": [
+            {
+                "@id": "http://commons.wikimedia.org/wiki/Special:FilePath/Mona%20Lisa%2C%20by%20Leonardo%20da%20Vinci%2C%20from%20C2RMF%20natural%20color.jpg"
+            }
+        ],
+        "http://www.wikidata.org/prop/direct/P571": [
+            {
+                "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+                "@value": "1503-01-01T00:00:00Z"
+            }
+        ]
+    }
+]
