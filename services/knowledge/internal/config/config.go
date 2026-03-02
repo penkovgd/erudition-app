@@ -15,7 +15,7 @@ type Config struct {
 	GRPC struct {
 		Host string `envconfig:"HOST"`
 		Port int    `envconfig:"PORT"`
-	} `evnconfig:"GRPC"`
+	} `envconfig:"GRPC"`
 
 	Neo4j struct {
 		URI      string `envconfig:"URI" required:"true"`
