@@ -1,0 +1,6 @@
+[
+  {"@id": "http://example.com/dup", "http://example.com/extra": "value"},
+  {"@id": "http://example.com/dup", "http://example.com/extra": "value_dup"},
+    {"@id": "http://example.com/dup", "http://example.com/extra": "value_dup"}
+
+]

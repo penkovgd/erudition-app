@@ -1,9 +1,9 @@
 services:
   knowledge:
+    image: erudition-app-knowledge:latest
     build:
       context: .
       dockerfile: services/knowledge/Dockerfile
-    container_name: knowledge
     ports:
       - "50051:50051"
     environment:
@@ -18,10 +18,10 @@ services:
     restart: unless-stopped
 
   neo4j:
+    image: erudition-app-neo4j:latest
     build:
       context: .
       dockerfile: build/Dockerfile.neo4j
-    container_name: neo4j
     ports:
       - "7474:7474" # web interface
       - "7687:7687" # bolt (connect to db)
@@ -43,36 +43,18 @@ services:
     restart: unless-stopped
   
   neo4j_init:
+    image: erudition-app-neo4j_init:latest
     build:
       context: .
       dockerfile: build/Dockerfile.neo4j    
-    container_name: neo4j_init
     depends_on:
       neo4j:
         condition: service_healthy
+    environment:
+      - NEO4J_AUTH_FILE=/run/secrets/neo4j_auth_file
     secrets:
       - neo4j_auth_file
-    command: > 
-      sh -c "
-        echo 'Starting preparing n10s...'
-
-        AUTH_STR=$$(cat /run/secrets/neo4j_auth_file)
-        USER=$$(echo $$AUTH_STR | cut -d'/' -f1)
-        PASS=$$(echo $$AUTH_STR | cut -d'/' -f2)
-
-        cypher-shell -a neo4j://neo4j:7687 -u $$USER -p $$PASS 'CREATE CONSTRAINT n10s_unique_uri IF NOT EXISTS FOR (r:Resource) REQUIRE r.uri IS UNIQUE;'
-        
-        CONFIG_EXISTS=$$(cypher-shell -a neo4j://neo4j:7687 -u $$USER -p $$PASS 'CALL n10s.graphconfig.show()' | grep -c 'handleVocabUris' || true)
-        
-        if [ $$CONFIG_EXISTS -eq 0 ]; then
-          echo 'Graph is empty, running n10s.graphconfig.init()...'
-          cypher-shell -a neo4j://neo4j:7687 -u $$USER -p $$PASS 'CALL n10s.graphconfig.init({handleVocabUris: \"MAP\", applyNeo4jNaming: true});'
-        else
-          echo 'n10s is already prepared, skipping.'
-        fi
-        
-        echo 'n10s preparing finished'
-      "
+    command: /usr/local/bin/init-n10s.sh
 
 
 volumes:

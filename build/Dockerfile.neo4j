@@ -6,4 +6,7 @@ ADD https://github.com/neo4j-labs/neosemantics/releases/download/5.26.0/neoseman
 
 RUN chmod 644 $NEO4J_HOME/plugins/neosemantics-5.26.0.jar
 
+COPY build/init-n10s.sh /usr/local/bin/init-n10s.sh
+RUN chmod +x /usr/local/bin/init-n10s.sh
+
 USER neo4j
