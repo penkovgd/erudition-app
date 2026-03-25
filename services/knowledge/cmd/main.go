@@ -6,17 +6,14 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
 	"github.com/penkovgd/erudition-app/pkg/logger"
 	neo4jAdapter "github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/neo4j"
+	"github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/wdqs"
+	"github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/yamlload"
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/config"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"github.com/penkovgd/erudition-app/services/knowledge/internal/core/services"
 )
 
 func main() {
@@ -41,32 +38,61 @@ func run(cfg config.Config, log *slog.Logger) error {
 	}
 	defer neo4j.Close(ctx)
 
-	// gRPC server
-	listener, err := net.Listen("tcp", cfg.GRPCAddress())
+	// Wikidata http client
+	wdqs, err := wdqs.New(log)
 	if err != nil {
-		return fmt.Errorf("listen: %w", err)
+		return fmt.Errorf("create wikidata http client: %w", err)
 	}
 
-	s := grpc.NewServer()
-	reflection.Register(s)
-
-	ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
-	defer stop()
-
-	go func() {
-		<-ctx.Done()
-		log.Debug("trying to shutdown gracefully...")
-		timer := time.AfterFunc(5*time.Second, func() {
-			log.Warn("server couldn't stop gracefully in time. doing force stop")
-			s.Stop()
-		})
-		defer timer.Stop()
-		s.GracefulStop()
-		log.Debug("server stopped gracefully")
-	}()
-
-	if err := s.Serve(listener); err != nil {
-		return fmt.Errorf("serve: %w", err)
+	// ETL
+	etl, err := services.NewETL(log, wdqs, neo4j)
+	if err != nil {
+		return fmt.Errorf("create ETL service: %w", err)
 	}
+
+	// Topic Provider
+	topicProvider := yamlload.NewTopicYAMLLoader(log)
+
+	// Topic Syncer
+	syncer, err := services.NewTopicSyncer(log, topicProvider, neo4j, etl)
+	if err != nil {
+		return fmt.Errorf("create topic syncer: %w", err)
+	}
+
+	// Sync topics
+	if err := syncer.Sync(ctx); err != nil {
+		return fmt.Errorf("sync topics: %w", err)
+	}
+
+	log.Info("topics synced successfully")
+
 	return nil
+
+	// gRPC server
+	// listener, err := net.Listen("tcp", cfg.GRPCAddress())
+	// if err != nil {
+	// 	return fmt.Errorf("listen: %w", err)
+	// }
+
+	// s := grpc.NewServer()
+	// reflection.Register(s)
+
+	// ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
+	// defer stop()
+
+	// go func() {
+	// 	<-ctx.Done()
+	// 	log.Debug("trying to shutdown gracefully...")
+	// 	timer := time.AfterFunc(5*time.Second, func() {
+	// 		log.Warn("server couldn't stop gracefully in time. doing force stop")
+	// 		s.Stop()
+	// 	})
+	// 	defer timer.Stop()
+	// 	s.GracefulStop()
+	// 	log.Debug("server stopped gracefully")
+	// }()
+
+	// if err := s.Serve(listener); err != nil {
+	// 	return fmt.Errorf("serve: %w", err)
+	// }
 }

@@ -1,0 +1,44 @@
+name: "Русская литература XX века"
+slug: "russian-literature-20-century"
+description: "Самые известные произведения русской литературы XX века"
+sparql: |
+  CONSTRUCT {
+    ?book wdt:P31 ?instanceBook.
+    ?book rdfs:label ?bookLabel.
+    ?book wdt:P50 ?author.
+    ?book wdt:P136 ?genre.
+    ?book wdt:P571 ?inception.
+    ?book wdt:P407 wd:Q7737.
+    ?author rdfs:label ?authorLabel.
+    ?genre rdfs:label ?genreLabel.
+    
+    ?instanceBook rdfs:label ?instanceBookLabel.
+    ?russian rdfs:label ?russianLabel.
+    wdt:P31 rdfs:label ?p31IDLabel.
+    wdt:P50 rdfs:label ?p50IDLabel.
+    wdt:P136 rdfs:label ?p136IDLabel.
+    wdt:P571 rdfs:label ?p571IDLabel.
+    wdt:P407 rdfs:label ?p407IDLabel.
+    rdfs:label rdfs:label "имеет ярлык".
+  }
+  WHERE {
+    BIND(wd:Q7725634 AS ?instanceBook)
+    BIND(wd:Q7737 AS ?russian)
+    ?p31ID wikibase:directClaim wdt:P31.
+    ?p50ID wikibase:directClaim wdt:P50.
+    ?p136ID wikibase:directClaim wdt:P136.
+    ?p571ID wikibase:directClaim wdt:P571.
+    ?p407ID wikibase:directClaim wdt:P407.
+    ?book wdt:P31 ?instanceBook;
+      wdt:P50 ?author;
+      wdt:P136 ?genre;
+      wdt:P571 ?inception;
+      wdt:P407 wd:Q7737;
+      wikibase:sitelinks ?sitelinks.
+    ?russianWikipediaLink schema:about ?book;
+      schema:isPartOf <https://ru.wikipedia.org/>.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
+    FILTER(((YEAR(?inception)) >= 1900 ) && ((YEAR(?inception)) < 2000 ))
+  }
+  ORDER BY DESC (?sitelinks)
+  LIMIT 30
