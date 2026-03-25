@@ -42,19 +42,19 @@ services:
       start_period: 10s
     restart: unless-stopped
   
-  neo4j_init:
-    image: erudition-app-neo4j_init:latest
-    build:
-      context: .
-      dockerfile: build/Dockerfile.neo4j    
-    depends_on:
-      neo4j:
-        condition: service_healthy
-    environment:
-      - NEO4J_AUTH_FILE=/run/secrets/neo4j_auth_file
-    secrets:
-      - neo4j_auth_file
-    command: /usr/local/bin/init-n10s.sh
+  # neo4j_init:
+  #   image: erudition-app-neo4j_init:latest
+  #   build:
+  #     context: .
+  #     dockerfile: build/Dockerfile.neo4j    
+  #   depends_on:
+  #     neo4j:
+  #       condition: service_healthy
+  #   environment:
+  #     - NEO4J_AUTH_FILE=/run/secrets/neo4j_auth_file
+  #   secrets:
+  #     - neo4j_auth_file
+  #   command: /usr/local/bin/init-n10s.sh
 
 
 volumes:

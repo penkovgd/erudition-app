@@ -3,6 +3,7 @@ package wdqs
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/penkovgd/erudition-app/pkg/closer"
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/core"
+	"github.com/piprate/json-gold/ld"
 )
 
 // Client is HTTP-client to query wikidata query service
@@ -37,8 +39,9 @@ func New(log *slog.Logger) (*Client, error) {
 	}, nil
 }
 
-// Extract takes sparql query and makes request to wdqs. Returns serialized json-ld
-func (c *Client) Extract(ctx context.Context, sparql string) (core.JSONLD, error) {
+// Extract takes sparql query and makes request to wdqs. Returns core rdf triples
+func (c *Client) Extract(ctx context.Context, topic core.Topic) ([]core.Quad, error) {
+	sparql := topic.SPARQL
 	if strings.TrimSpace(sparql) == "" {
 		return nil, errors.New("empty sparql query")
 	}
@@ -68,5 +71,82 @@ func (c *Client) Extract(ctx context.Context, sparql string) (core.JSONLD, error
 	if err != nil {
 		return nil, fmt.Errorf("read response body: %w", err)
 	}
-	return jsonld, nil
+
+	quads, err := c.JsonldToQuads(jsonld)
+	if err != nil {
+		return nil, fmt.Errorf("convert json-ld to quads: %w", err)
+	}
+
+	for i := range quads {
+		quads[i].Graph = topic.Slug
+	}
+
+	return quads, nil
+}
+
+// JsonldToQuads parses jsonld via json-gold module and maps it to core model
+func (c *Client) JsonldToQuads(jsonld []byte) ([]core.Quad, error) {
+	var jsonldObj any
+	if err := json.Unmarshal(jsonld, &jsonldObj); err != nil {
+		return nil, fmt.Errorf("unmarshal json-ld into Go struct: %w", err)
+	}
+
+	proc := ld.NewJsonLdProcessor()
+	options := ld.NewJsonLdOptions("")
+
+	rdf, err := proc.ToRDF(jsonldObj, options)
+	if err != nil {
+		return nil, fmt.Errorf("convert json-ld to RDF: %w", err)
+	}
+	rdfDataset, ok := rdf.(*ld.RDFDataset)
+	if !ok {
+		return nil, fmt.Errorf("expected *ld.RDFDataset, got %T", rdf)
+	}
+
+	quads := rdfDataset.GetQuads("@default")
+
+	if len(quads) == 0 {
+		return nil, fmt.Errorf("named graphs are not supported")
+	}
+
+	triples := make([]core.Quad, 0, len(quads))
+	for _, q := range quads {
+		triple := core.Quad{}
+
+		switch subj := q.Subject.(type) {
+		case ld.IRI:
+			triple.Subject = core.URI(subj.GetValue())
+		case ld.BlankNode:
+			return nil, fmt.Errorf("blank nodes not supported")
+		default:
+			return nil, fmt.Errorf("expected ld.IRI or ld.BlankNode for subject, got %T", q.Subject)
+		}
+
+		pred, ok := q.Predicate.(ld.IRI)
+		if !ok {
+			return nil, fmt.Errorf("expected ld.IRI for predicate, got %T", q.Predicate)
+		}
+		triple.Predicate = core.URI(pred.GetValue())
+
+		switch obj := q.Object.(type) {
+		case ld.Literal:
+			triple.Object = core.Object{
+				Kind:     "literal",
+				Value:    obj.Value,
+				Datatype: obj.Datatype,
+				Language: obj.Language,
+			}
+		case ld.IRI:
+			triple.Object = core.Object{
+				Kind:  "uri",
+				Value: obj.GetValue(),
+			}
+		default:
+			return nil, fmt.Errorf("expected ld.Literal or ld.IRI for object, got %T", q.Object)
+		}
+
+		triples = append(triples, triple)
+	}
+
+	return triples, nil
 }

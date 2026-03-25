@@ -3,8 +3,9 @@ package config
 
 import (
 	"fmt"
+	"log"
 
-	_ "github.com/joho/godotenv/autoload" // Autoload .env files
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -18,7 +19,7 @@ type Config struct {
 	} `envconfig:"GRPC"`
 
 	Neo4j struct {
-		URI      string `envconfig:"URI" required:"true"`
+		URI      string `envconfig:"URI"`
 		Username string `envconfig:"USERNAME"`
 		Password string `envconfig:"PASSWORD"`
 		Database string `envconfig:"DATABASE"`
@@ -27,8 +28,14 @@ type Config struct {
 
 // MustLoad loads config, if fails - panics
 func MustLoad() Config {
-	var cfg Config
+	err := godotenv.Load()
+	if err != nil {
+		if err := godotenv.Load("../.env"); err != nil {
+			log.Println("Warning: no .env file found, relying on system environment variables")
+		}
+	}
 
+	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		panic("failed to load config: " + err.Error())
 	}
