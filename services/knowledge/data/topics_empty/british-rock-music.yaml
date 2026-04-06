@@ -1,0 +1,10 @@
+name: "Британская рок-музыка 1960-70х годов"
+slug: "british-rock-music"
+description: "Легендарные рок-группы и исполнители Великобритании"
+sparql: ""
+
+concepts:
+  - music
+  - uk
+  - 20th_century
+

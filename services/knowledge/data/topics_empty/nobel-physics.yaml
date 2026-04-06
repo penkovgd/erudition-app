@@ -1,0 +1,11 @@
+name: "Нобелевские лауреаты по физике"
+slug: "nobel-physics"
+description: "Великие физики и их открытия, удостоенные Нобелевской премии"
+sparql: ""
+
+concepts:
+  - physics
+  - global
+  - 20th_century
+  - 21st_century
+

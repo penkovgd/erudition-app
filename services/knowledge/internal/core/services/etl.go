@@ -34,6 +34,11 @@ func (e *ETL) LoadTopic(ctx context.Context, topic core.Topic) error {
 	if err != nil {
 		return fmt.Errorf("extract quads: %w", err)
 	}
+
+	if err := e.loader.LoadTopic(ctx, topic); err != nil {
+		return fmt.Errorf("load topic: %w", err)
+	}
+
 	err = e.loader.LoadQuads(ctx, quads)
 	if err != nil {
 		return fmt.Errorf("load quads to knowledge graph: %w", err)

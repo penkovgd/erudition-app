@@ -1,0 +1,10 @@
+name: "Русская классическая литература"
+slug: "russian-classical-literature"
+description: "Произведения и авторы Золотого века русской литературы"
+sparql: ""
+
+concepts:
+  - literature
+  - russia
+  - 19th_century
+

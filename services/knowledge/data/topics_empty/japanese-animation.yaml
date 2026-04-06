@@ -1,0 +1,11 @@
+name: "Японская анимация"
+slug: "japanese-animation"
+description: "Студия Ghibli, известные режиссеры и шедевры аниме"
+sparql: ""
+
+concepts:
+  - cinema
+  - japan
+  - 20th_century
+  - 21st_century
+

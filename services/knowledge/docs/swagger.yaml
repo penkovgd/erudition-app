@@ -1,0 +1,146 @@
+basePath: /
+definitions:
+  github_com_penkovgd_erudition-app_services_knowledge_internal_core.Topic:
+    properties:
+      concepts:
+        items:
+          type: string
+        type: array
+      description:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+    type: object
+  internal_adapters_httpserver.Concept:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/internal_adapters_httpserver.Concept'
+        type: array
+      id:
+        type: string
+      label:
+        type: string
+      related:
+        items:
+          type: string
+        type: array
+    type: object
+  internal_adapters_httpserver.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  internal_adapters_httpserver.Facet:
+    properties:
+      concepts:
+        items:
+          $ref: '#/definitions/internal_adapters_httpserver.Concept'
+        type: array
+      id:
+        type: string
+      label:
+        type: string
+    type: object
+  internal_adapters_httpserver.SKOSResponse:
+    properties:
+      facets:
+        description: Здесь мы предполагаем, что core.Facet (или как называется ваше
+          дерево) корректно сериализуется
+        items:
+          $ref: '#/definitions/internal_adapters_httpserver.Facet'
+        type: array
+    type: object
+  internal_adapters_httpserver.SyncResponse:
+    properties:
+      message:
+        example: Synchronization completed successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  internal_adapters_httpserver.TopicsResponse:
+    properties:
+      topics:
+        description: Если core.Topic содержит json теги, swag их прочитает
+        items:
+          $ref: '#/definitions/github_com_penkovgd_erudition-app_services_knowledge_internal_core.Topic'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: API микросервиса knowledge для работы с графом знаний (деревья SKOS
+    и топики).
+  title: Knowledge API
+  version: "1.0"
+paths:
+  /api/v1/skos:
+    get:
+      description: Возвращает фасеты и концепты, которые используются для фильтрации
+        в UI.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_adapters_httpserver.SKOSResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_adapters_httpserver.ErrorResponse'
+      summary: Получить дерево классификации (SKOS)
+      tags:
+      - skos
+  /api/v1/sync:
+    post:
+      description: Синхронизирует данные из YAML файлов с графовой БД Neo4j.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_adapters_httpserver.SyncResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_adapters_httpserver.ErrorResponse'
+      summary: Запуск ручной синхронизации
+      tags:
+      - sync
+  /api/v1/topics:
+    get:
+      description: 'Возвращает топики. Поддерживает фильтрацию: пересечение фасетов
+        (AND) и объединение внутри фасета (OR через запятую).'
+      parameters:
+      - description: 'Фильтр по географии (например: concept:russia,concept:europe)'
+        in: query
+        name: scheme:geography
+        type: string
+      - description: 'Фильтр по времени (например: concept:20th_century)'
+        in: query
+        name: scheme:time
+        type: string
+      - description: Фильтр по области знаний
+        in: query
+        name: scheme:domain
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_adapters_httpserver.TopicsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_adapters_httpserver.ErrorResponse'
+      summary: Получение списка топиков
+      tags:
+      - topics
+swagger: "2.0"

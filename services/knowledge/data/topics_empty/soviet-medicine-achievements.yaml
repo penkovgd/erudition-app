@@ -1,0 +1,10 @@
+name: "Достижения советской медицины"
+slug: "soviet-medicine-achievements"
+description: "Выдающиеся врачи, институты и открытия медицины в СССР"
+sparql: ""
+
+concepts:
+  - medicine
+  - ussr
+  - 20th_century
+

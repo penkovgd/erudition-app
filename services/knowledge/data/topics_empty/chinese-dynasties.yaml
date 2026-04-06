@@ -1,0 +1,11 @@
+name: "Династии китайских императоров"
+slug: "chinese-dynasties"
+description: "Эпохи правления и правители великих династий Китая"
+sparql: ""
+
+concepts:
+  - history
+  - china
+  - antiquity
+  - middle_ages
+

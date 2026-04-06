@@ -1,0 +1,217 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API микросервиса knowledge для работы с графом знаний (деревья SKOS и топики).",
+        "title": "Knowledge API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api/v1/skos": {
+            "get": {
+                "description": "Возвращает фасеты и концепты, которые используются для фильтрации в UI.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "skos"
+                ],
+                "summary": "Получить дерево классификации (SKOS)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_httpserver.SKOSResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_httpserver.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sync": {
+            "post": {
+                "description": "Синхронизирует данные из YAML файлов с графовой БД Neo4j.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sync"
+                ],
+                "summary": "Запуск ручной синхронизации",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_httpserver.SyncResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_httpserver.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/topics": {
+            "get": {
+                "description": "Возвращает топики. Поддерживает фильтрацию: пересечение фасетов (AND) и объединение внутри фасета (OR через запятую).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "topics"
+                ],
+                "summary": "Получение списка топиков",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Фильтр по географии (например: concept:russia,concept:europe)",
+                        "name": "scheme:geography",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Фильтр по времени (например: concept:20th_century)",
+                        "name": "scheme:time",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Фильтр по области знаний",
+                        "name": "scheme:domain",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_httpserver.TopicsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_httpserver.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_penkovgd_erudition-app_services_knowledge_internal_core.Topic": {
+            "type": "object",
+            "properties": {
+                "concepts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_adapters_httpserver.Concept": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_adapters_httpserver.Concept"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "related": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "internal_adapters_httpserver.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_adapters_httpserver.Facet": {
+            "type": "object",
+            "properties": {
+                "concepts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_adapters_httpserver.Concept"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_adapters_httpserver.SKOSResponse": {
+            "type": "object",
+            "properties": {
+                "facets": {
+                    "description": "Здесь мы предполагаем, что core.Facet (или как называется ваше дерево) корректно сериализуется",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_adapters_httpserver.Facet"
+                    }
+                }
+            }
+        },
+        "internal_adapters_httpserver.SyncResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Synchronization completed successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "internal_adapters_httpserver.TopicsResponse": {
+            "type": "object",
+            "properties": {
+                "topics": {
+                    "description": "Если core.Topic содержит json теги, swag их прочитает",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_penkovgd_erudition-app_services_knowledge_internal_core.Topic"
+                    }
+                }
+            }
+        }
+    }
+}

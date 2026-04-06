@@ -3,8 +3,6 @@ package neo4j
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
 	"log/slog"
 
@@ -41,7 +39,7 @@ func New(ctx context.Context, log *slog.Logger, uri, username, password string) 
 	return &Client{Driver: driver, log: log}, nil
 }
 
-// Close closes neo4j driver. If he gives an error, panics
+// Close closes neo4j driver. If he gives an error, logs
 func (c *Client) Close(ctx context.Context) {
 	closer.CloseOrLogContext(ctx, c.log, c.Driver)
 }
@@ -57,11 +55,6 @@ func ensureConstraints(ctx context.Context, driver neo4j.Driver) error {
 			"CREATE CONSTRAINT IF NOT EXISTS FOR (r:Resource) REQUIRE r.uri IS UNIQUE", nil); err != nil {
 			return nil, err
 		}
-		// Predicate: unique URI
-		if _, err := tx.Run(ctx,
-			"CREATE CONSTRAINT IF NOT EXISTS FOR (p:Predicate) REQUIRE p.uri IS UNIQUE", nil); err != nil {
-			return nil, err
-		}
 		// Topic: unique URI
 		if _, err := tx.Run(ctx,
 			"CREATE CONSTRAINT IF NOT EXISTS FOR (t:Topic) REQUIRE t.uri IS UNIQUE", nil); err != nil {
@@ -72,187 +65,115 @@ func ensureConstraints(ctx context.Context, driver neo4j.Driver) error {
 			"CREATE CONSTRAINT IF NOT EXISTS FOR (l:Literal) REQUIRE (l.value, l.datatype, l.language) IS UNIQUE", nil); err != nil {
 			return nil, err
 		}
-		// Triplet: unique ID
-		if _, err := tx.Run(ctx,
-			"CREATE CONSTRAINT IF NOT EXISTS FOR (t:Triplet) REQUIRE t.id IS UNIQUE", nil); err != nil {
-			return nil, err
-		}
+
 		// Indexes for faster lookups
-		if _, err := tx.Run(ctx,
-			"CREATE INDEX IF NOT EXISTS FOR (l:Literal) ON (l.value)", nil); err != nil {
+		if _, err := tx.Run(ctx, "CREATE INDEX IF NOT EXISTS FOR (r:Resource) ON (r.label)", nil); err != nil {
 			return nil, err
 		}
-		if _, err := tx.Run(ctx,
-			"CREATE INDEX IF NOT EXISTS FOR (l:Literal) ON (l.datatype)", nil); err != nil {
+		if _, err := tx.Run(ctx, "CREATE INDEX IF NOT EXISTS FOR (r:Resource) ON (r.topics)", nil); err != nil {
 			return nil, err
 		}
-		if _, err := tx.Run(ctx,
-			"CREATE INDEX IF NOT EXISTS FOR (l:Literal) ON (l.language)", nil); err != nil {
+		if _, err := tx.Run(ctx, "CREATE INDEX IF NOT EXISTS FOR (l:Literal) ON (l.value)", nil); err != nil {
+			return nil, err
+		}
+		if _, err := tx.Run(ctx, "CREATE INDEX IF NOT EXISTS FOR (l:Literal) ON (l.topics)", nil); err != nil {
+			return nil, err
+		}
+		// Index for Relationship properties
+		if _, err := tx.Run(ctx, "CREATE INDEX IF NOT EXISTS FOR ()-[r:REL]-() ON (r.uri)", nil); err != nil {
 			return nil, err
 		}
 
-		if _, err := tx.Run(ctx,
-			"CREATE INDEX IF NOT EXISTS FOR (r:Resource) ON (r.label)", nil); err != nil {
-			return nil, err
-		}
-		if _, err := tx.Run(ctx,
-			"CREATE INDEX IF NOT EXISTS FOR (p:Predicate) ON (p.label)", nil); err != nil {
-			return nil, err
-		}
 		return nil, nil
 	})
 	return err
 }
 
-// generateTripletID creates a unique identifier for a triplet.
-// It uses a SHA‑256 hash of the concatenation:
-//
-//	subject_uri + "|" + predicate_uri + "|" + object_key
-//
-// where object_key is either the URI (for entities) or a string representing the literal.
-func generateTripletID(subjURI, predURI string, obj core.Object) string {
-	var objKey string
+// Добавлен параметр description
+func createResourceNode(ctx context.Context, tx neo4j.ManagedTransaction, uri, label, description, topic string) error {
+	query := `
+        MERGE (r:Resource {uri: $uri})
+        ON CREATE SET 
+            r.label = $label,
+            r.description = $description,
+            r.topics = CASE WHEN $topic <> "" THEN [$topic] ELSE [] END
+        ON MATCH SET 
+            r.label = CASE WHEN $label <> "" THEN $label ELSE r.label END,
+            r.description = CASE WHEN $description <> "" THEN $description ELSE r.description END,
+            r.topics = CASE WHEN $topic <> "" AND NOT $topic IN r.topics THEN r.topics + $topic ELSE r.topics END
+    `
+	_, err := tx.Run(ctx, query, map[string]any{
+		"uri":         uri,
+		"label":       label,
+		"description": description,
+		"topic":       topic,
+	})
+	return err
+}
+
+func createLiteralNode(ctx context.Context, tx neo4j.ManagedTransaction, obj core.Object, topic string) error {
+	query := `
+        MERGE (l:Literal {value: $value, datatype: $datatype, language: $language})
+        ON CREATE SET 
+            l.topics = CASE WHEN $topic <> "" THEN [$topic] ELSE [] END
+        ON MATCH SET 
+            l.topics = CASE WHEN $topic <> "" AND NOT $topic IN l.topics THEN l.topics + $topic ELSE l.topics END
+    `
+	_, err := tx.Run(ctx, query, map[string]any{
+		"value":    obj.Value,
+		"datatype": obj.Datatype,
+		"language": obj.Language,
+		"topic":    topic,
+	})
+	return err
+}
+
+// Добавлен параметр predDesc
+func createRelationship(ctx context.Context, tx neo4j.ManagedTransaction, subjURI, predURI, predLabel, predDesc string, obj core.Object, topic string) error {
+	params := map[string]any{
+		"subjURI":   subjURI,
+		"predURI":   predURI,
+		"predLabel": predLabel,
+		"predDesc":  predDesc,
+		"topic":     topic,
+	}
+
+	var query string
 	if obj.Kind == "uri" {
-		objKey = "uri:" + obj.Value
+		query = `
+            MATCH (s:Resource {uri: $subjURI})
+            MATCH (o:Resource {uri: $objURI})
+            MERGE (s)-[rel:REL {uri: $predURI}]->(o)
+            ON CREATE SET 
+                rel.label = $predLabel,
+                rel.description = $predDesc,
+                rel.topics = CASE WHEN $topic <> "" THEN [$topic] ELSE [] END
+            ON MATCH SET 
+                rel.label = CASE WHEN $predLabel <> "" THEN $predLabel ELSE rel.label END,
+                rel.description = CASE WHEN $predDesc <> "" THEN $predDesc ELSE rel.description END,
+                rel.topics = CASE WHEN $topic <> "" AND NOT $topic IN rel.topics THEN rel.topics + $topic ELSE rel.topics END
+        `
+		params["objURI"] = obj.Value
 	} else {
-		// literal: value|datatype|language
-		objKey = fmt.Sprintf("lit:%s|%s|%s", obj.Value, obj.Datatype, obj.Language)
-	}
-	raw := subjURI + "|" + predURI + "|" + objKey
-	hash := sha256.Sum256([]byte(raw))
-	return hex.EncodeToString(hash[:])
-}
-
-func createResourceNode(ctx context.Context, tx neo4j.ManagedTransaction, uri, label string) error {
-	params := map[string]any{"uri": uri, "label": label}
-	_, err := tx.Run(ctx,
-		"MERGE (r:Resource {uri: $uri}) ON CREATE SET r.label = $label ON MATCH SET r.label = $label",
-		params)
-	return err
-}
-
-func createPredicateNode(ctx context.Context, tx neo4j.ManagedTransaction, uri, label string) error {
-	params := map[string]any{"uri": uri, "label": label}
-	_, err := tx.Run(ctx,
-		"MERGE (p:Predicate {uri: $uri}) ON CREATE SET p.label = $label ON MATCH SET p.label = $label",
-		params)
-	return err
-}
-
-func createLiteralNode(ctx context.Context, tx neo4j.ManagedTransaction, obj core.Object) error {
-	_, err := tx.Run(ctx,
-		`MERGE (l:Literal {value: $value, datatype: $datatype, language: $language})`,
-		map[string]any{
-			"value":    obj.Value,
-			"datatype": obj.Datatype,
-			"language": obj.Language,
-		})
-	return err
-}
-
-func createTopicNode(ctx context.Context, tx neo4j.ManagedTransaction, uri string) error {
-	_, err := tx.Run(ctx,
-		"MERGE (t:Topic {uri: $uri})",
-		map[string]any{"uri": uri})
-	return err
-}
-
-func createTripletNode(ctx context.Context, tx neo4j.ManagedTransaction, tripletID string) error {
-	_, err := tx.Run(ctx,
-		"MERGE (tr:Triplet {id: $id})",
-		map[string]any{"id": tripletID})
-	return err
-}
-
-func createSubjectRelationship(ctx context.Context, tx neo4j.ManagedTransaction, tripletID, subjectURI string) error {
-	_, err := tx.Run(ctx,
-		`MATCH (tr:Triplet {id: $tripletID})
-		 MATCH (s:Resource {uri: $subjectURI})
-		 MERGE (tr)-[:SUBJECT]->(s)`,
-		map[string]any{
-			"tripletID":  tripletID,
-			"subjectURI": subjectURI,
-		})
-	return err
-}
-
-func createPredicateRelationship(ctx context.Context, tx neo4j.ManagedTransaction, tripletID, predicateURI string) error {
-	_, err := tx.Run(ctx,
-		`MATCH (tr:Triplet {id: $tripletID})
-		 MATCH (p:Predicate {uri: $predicateURI})
-		 MERGE (tr)-[:PREDICATE]->(p)`,
-		map[string]any{
-			"tripletID":    tripletID,
-			"predicateURI": predicateURI,
-		})
-	return err
-}
-
-func createObjectRelationship(ctx context.Context, tx neo4j.ManagedTransaction, tripletID string, obj core.Object) error {
-	if obj.Kind == "uri" {
-		_, err := tx.Run(ctx,
-			`MATCH (tr:Triplet {id: $tripletID})
-			 MATCH (o:Resource {uri: $objectURI})
-			 MERGE (tr)-[:OBJECT]->(o)`,
-			map[string]any{
-				"tripletID": tripletID,
-				"objectURI": obj.Value,
-			})
-		return err
+		query = `
+            MATCH (s:Resource {uri: $subjURI})
+            MATCH (o:Literal {value: $value, datatype: $datatype, language: $language})
+            MERGE (s)-[rel:REL {uri: $predURI}]->(o)
+            ON CREATE SET 
+                rel.label = $predLabel,
+                rel.description = $predDesc,
+                rel.topics = CASE WHEN $topic <> "" THEN [$topic] ELSE [] END
+            ON MATCH SET 
+                rel.label = CASE WHEN $predLabel <> "" THEN $predLabel ELSE rel.label END,
+                rel.description = CASE WHEN $predDesc <> "" THEN $predDesc ELSE rel.description END,
+                rel.topics = CASE WHEN $topic <> "" AND NOT $topic IN rel.topics THEN rel.topics + $topic ELSE rel.topics END
+        `
+		params["value"] = obj.Value
+		params["datatype"] = obj.Datatype
+		params["language"] = obj.Language
 	}
 
-	// literal
-	_, err := tx.Run(ctx,
-		`MATCH (tr:Triplet {id: $tripletID})
-		 MATCH (l:Literal {value: $value, datatype: $datatype, language: $language})
-		 MERGE (tr)-[:OBJECT]->(l)`,
-		map[string]any{
-			"tripletID": tripletID,
-			"value":     obj.Value,
-			"datatype":  obj.Datatype,
-			"language":  obj.Language,
-		})
-	return err
-}
-
-func createBelongsToRelationship(ctx context.Context, tx neo4j.ManagedTransaction, tripletID, topicURI string) error {
-	_, err := tx.Run(ctx,
-		`MATCH (tr:Triplet {id: $tripletID})
-		 MATCH (t:Topic {uri: $topicURI})
-		 MERGE (tr)-[:BELONGS_TO]->(t)`,
-		map[string]any{
-			"tripletID": tripletID,
-			"topicURI":  topicURI,
-		})
-	return err
-}
-
-// LoadTopics creates Topic nodes from a list of topics.
-func (c *Client) LoadTopics(ctx context.Context, topics []core.Topic) error {
-	session := c.NewSession(ctx, neo4j.SessionConfig{})
-	defer closer.CloseOrLogContext(ctx, c.log, session)
-
-	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
-		for _, topic := range topics {
-			uri := topic.Slug
-			if err := createTopicNode(ctx, tx, uri); err != nil {
-				return nil, fmt.Errorf("create topic %s: %w", uri, err)
-			}
-			_, err := tx.Run(ctx,
-				"MATCH (t:Topic {uri: $uri}) SET t.name = $name, t.description = $description, t.sparql = $sparql",
-				map[string]any{
-					"uri":         uri,
-					"name":        topic.Name,
-					"description": topic.Description,
-					"sparql":      topic.SPARQL,
-				})
-			if err != nil {
-				return nil, fmt.Errorf("set properties for topic %s: %w", uri, err)
-			}
-		}
-		return nil, nil
-	})
-
+	_, err := tx.Run(ctx, query, params)
 	return err
 }
 
@@ -306,7 +227,7 @@ func (c *Client) GetAll(ctx context.Context) ([]core.Topic, error) {
 	return topics, nil
 }
 
-func toString(v interface{}) string {
+func toString(v any) string {
 	if v == nil {
 		return ""
 	}
@@ -316,86 +237,83 @@ func toString(v interface{}) string {
 	return fmt.Sprintf("%v", v)
 }
 
-// LoadQuads imports RDF quads into the graph.
+// LoadQuads imports RDF quads into the graph with direct relationships.
 func (c *Client) LoadQuads(ctx context.Context, quads []core.Quad) error {
 	session := c.NewSession(ctx, neo4j.SessionConfig{})
 	defer closer.CloseOrLogContext(ctx, c.log, session)
 
 	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		// Добавлен словарь предикатов, которые являются метками
 		labelPredicates := map[string]bool{
 			"http://www.w3.org/2000/01/rdf-schema#label":    true,
 			"http://www.w3.org/2004/02/skos/core#prefLabel": true,
 		}
+		// Добавлен словарь предикатов, которые являются описаниями
+		descriptionPredicates := map[string]bool{
+			"http://schema.org/description": true,
+		}
 
+		// 1. Собираем все label и description для Resource и Predicate
 		resourceLabels := make(map[string]string)
-		predicateLabels := make(map[string]string)
+		resourceDescriptions := make(map[string]string)
 
 		for _, q := range quads {
 			if q.Object.Kind != "literal" {
 				continue
 			}
 			predURI := string(q.Predicate)
+			subjURI := string(q.Subject)
+
 			if labelPredicates[predURI] {
-				subjURI := string(q.Subject)
 				if _, exists := resourceLabels[subjURI]; !exists {
 					resourceLabels[subjURI] = q.Object.Value
 				}
-
-				if _, exists := predicateLabels[subjURI]; !exists {
-					predicateLabels[subjURI] = q.Object.Value
+			} else if descriptionPredicates[predURI] {
+				if _, exists := resourceDescriptions[subjURI]; !exists {
+					resourceDescriptions[subjURI] = q.Object.Value
 				}
 			}
 		}
 
+		// 2. Основной цикл загрузки узлов и связей
 		for _, q := range quads {
 			subjURI := string(q.Subject)
 			subjLabel := resourceLabels[subjURI]
-			if err := createResourceNode(ctx, tx, subjURI, subjLabel); err != nil {
-				return nil, fmt.Errorf("subject node %s: %w", q.Subject, err)
-			}
-
+			subjDesc := resourceDescriptions[subjURI]
+			topicURI := q.Graph
 			predURI := string(q.Predicate)
-			predLabel := predicateLabels[predURI]
-			if err := createPredicateNode(ctx, tx, predURI, predLabel); err != nil {
-				return nil, fmt.Errorf("predicate node %s: %w", q.Predicate, err)
+
+			// Создаем субъект (теперь и с label, и с description)
+			if err := createResourceNode(ctx, tx, subjURI, subjLabel, subjDesc, topicURI); err != nil {
+				return nil, fmt.Errorf("subject node %s: %w", subjURI, err)
 			}
 
+			// Если квад задает label или description узлу, то свойство мы уже сохранили, хвост не нужен
+			if labelPredicates[predURI] || descriptionPredicates[predURI] {
+				continue
+			}
+
+			// Создаем объект
 			if q.Object.Kind == "uri" {
 				objURI := q.Object.Value
 				objLabel := resourceLabels[objURI]
-				if err := createResourceNode(ctx, tx, objURI, objLabel); err != nil {
+				objDesc := resourceDescriptions[objURI]
+				if err := createResourceNode(ctx, tx, objURI, objLabel, objDesc, topicURI); err != nil {
 					return nil, fmt.Errorf("object resource %s: %w", objURI, err)
 				}
 			} else {
-				if err := createLiteralNode(ctx, tx, q.Object); err != nil {
+				// Обычный строковый литерал
+				if err := createLiteralNode(ctx, tx, q.Object, topicURI); err != nil {
 					return nil, fmt.Errorf("literal node: %w", err)
 				}
 			}
 
-			if q.Graph != "" {
-				if err := createTopicNode(ctx, tx, q.Graph); err != nil {
-					return nil, fmt.Errorf("topic node %s: %w", q.Graph, err)
-				}
-			}
+			// Создаем связь (Предикат) с его возможным label и description
+			predLabel := resourceLabels[predURI]
+			predDesc := resourceDescriptions[predURI]
 
-			tripletID := generateTripletID(subjURI, predURI, q.Object)
-			if err := createTripletNode(ctx, tx, tripletID); err != nil {
-				return nil, fmt.Errorf("triplet node %s: %w", tripletID, err)
-			}
-
-			if err := createSubjectRelationship(ctx, tx, tripletID, subjURI); err != nil {
-				return nil, fmt.Errorf("subject relationship: %w", err)
-			}
-			if err := createPredicateRelationship(ctx, tx, tripletID, predURI); err != nil {
-				return nil, fmt.Errorf("predicate relationship: %w", err)
-			}
-			if err := createObjectRelationship(ctx, tx, tripletID, q.Object); err != nil {
-				return nil, fmt.Errorf("object relationship: %w", err)
-			}
-			if q.Graph != "" {
-				if err := createBelongsToRelationship(ctx, tx, tripletID, q.Graph); err != nil {
-					return nil, fmt.Errorf("belongs_to relationship: %w", err)
-				}
+			if err := createRelationship(ctx, tx, subjURI, predURI, predLabel, predDesc, q.Object, topicURI); err != nil {
+				return nil, fmt.Errorf("relationship creation error: %w", err)
 			}
 		}
 		return nil, nil

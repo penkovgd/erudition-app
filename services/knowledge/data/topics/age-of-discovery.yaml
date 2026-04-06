@@ -1,0 +1,66 @@
+name: "Эпоха великих географических открытий"
+slug: "age-of-discovery"
+description: "Мореплаватели, экспедиции и открытия новых земель"
+sparql: |
+  CONSTRUCT {
+  ?explorer wdt:P31 wd:Q5.
+  ?explorer rdfs:label ?explorerLabel.
+  ?explorer wdt:P18 ?image.
+  ?explorer wdt:P27 ?country.
+  ?explorer wdt:P106 ?occupation.
+  ?explorer wdt:P710 ?expedition.
+  ?discovery rdfs:label ?discoveryLabel.
+  ?discovery wdt:P61 ?explorer.
+  ?expedition rdfs:label ?expeditionLabel.
+  ?expedition wdt:P1876 ?ship.
+  ?ship rdfs:label ?shipLabel.
+  ?country rdfs:label ?countryLabel.
+  ?occupation rdfs:label ?occupationLabel.
+  ?instanceHuman rdfs:label ?instanceHumanLabel.
+  wdt:P31 rdfs:label ?p31IDLabel.
+  wdt:P18 rdfs:label ?p18IDLabel.
+  wdt:P27 rdfs:label ?p27IDLabel.
+  wdt:P106 rdfs:label ?p106IDLabel.
+  wdt:P61 rdfs:label ?p61IDLabel.
+  wdt:P710 rdfs:label ?p710IDLabel.
+  wdt:P1876 rdfs:label ?p1876IDLabel.
+  }
+  WHERE {
+    BIND(wd:Q5 AS ?instanceHuman)
+    ?p31ID wikibase:directClaim wdt:P31.
+    ?p18ID wikibase:directClaim wdt:P18.
+    ?p27ID wikibase:directClaim wdt:P27.
+    ?p106ID wikibase:directClaim wdt:P106.
+    ?p61ID wikibase:directClaim wdt:P61.
+    ?p710ID wikibase:directClaim wdt:P710.
+    ?p1876ID wikibase:directClaim wdt:P1876.
+    VALUES ?occupation {
+      wd:Q1064445
+      wd:Q11900058
+    }
+    ?explorer wdt:P31 wd:Q5;
+      wdt:P106 ?occupation;
+      wdt:P569 ?birth;
+      wikibase:sitelinks ?sitelinks.
+    FILTER(((YEAR(?birth)) >= 1350 ) && ((YEAR(?birth)) <= 1650 ))
+    OPTIONAL { ?discovery wdt:P61 ?explorer. }
+    OPTIONAL {
+      ?explorer p:P710 ?expeditionStatement.
+      ?expeditionStatement ps:P710 ?expedition.
+      ?expedition (wdt:P31/(wdt:P279*)) wd:Q615090.
+      OPTIONAL { ?expedition wdt:P1876 ?ship. }
+    }
+    OPTIONAL { ?explorer wdt:P27 ?country. }
+    OPTIONAL { ?explorer wdt:P18 ?image. }
+    ?russianWikipediaLink schema:about ?explorer;
+      schema:isPartOf <https://ru.wikipedia.org/>.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
+  }
+  ORDER BY DESC (?sitelinks)
+  LIMIT 50
+
+concepts:
+  - history
+  - europe
+  - americas
+  - renaissance

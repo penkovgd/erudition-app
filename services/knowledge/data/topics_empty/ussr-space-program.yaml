@@ -1,0 +1,12 @@
+name: "Космическая программа СССР"
+slug: "ussr-space-program"
+description: "Первые спутники, миссии и космонавты Советского Союза"
+sparql: ""
+
+concepts:
+  - it
+  - astronomy
+  - ussr
+  - space
+  - 20th_century
+

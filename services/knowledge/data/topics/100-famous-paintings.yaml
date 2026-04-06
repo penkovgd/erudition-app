@@ -1,44 +1,54 @@
-name: "100 самых известных картин"
 slug: "100-famous-paintings"
+name: "100 самых известных картин"
 description: "100 cамых известных и влиятельных картин в истории искусства"
 sparql: |
   CONSTRUCT {
-  ?painting wdt:P31 wd:Q3305213.
-  ?painting rdfs:label ?paintingLabel.
-  ?painting wdt:P135 ?movement.
-  ?painting wdt:P571 ?inception.
-  ?painting wdt:P170 ?creator.
-  ?painting wdt:P18 ?image.
-  ?creator rdfs:label ?creatorLabel.
-  ?movement rdfs:label ?movementLabel.
-  ?instancePainting rdfs:label ?instancePaintingLabel.
+    ?painting wdt:P31 wd:Q3305213.
+    ?painting rdfs:label ?paintingLabel.
+    ?painting wdt:P135 ?movement.
+    ?painting wdt:P571 ?inception.
+    ?painting wdt:P170 ?creator.
+    ?painting wdt:P18 ?image.
+    ?creator rdfs:label ?creatorLabel.
+    ?creator wdt:P27 ?country.
+    ?country rdfs:label ?countryLabel.
+    ?movement rdfs:label ?movementLabel.
+    ?instancePainting rdfs:label ?instancePaintingLabel.
+    wdt:P31 rdfs:label ?p31IDLabel.
+    wdt:P135 rdfs:label ?p135IDLabel.
+    wdt:P571 rdfs:label ?p571IDLabel.
+    wdt:P170 rdfs:label ?p170IDLabel.
+    wdt:P18 rdfs:label ?p18IDLabel.
+    wdt:P27 rdfs:label ?p27IDLabel.
+    
+    ?painting schema:description ?paintingDescription.
+    ?creator schema:description ?creatorDescription.
+    ?country schema:description ?countryDescription.
+    ?movement schema:description ?movementDescription.
 
-  wdt:P31 rdfs:label ?p31IDLabel.
-  wdt:P135 rdfs:label ?p135IDLabel.
-  wdt:P571 rdfs:label ?p571IDLabel.
-  wdt:P170 rdfs:label ?p170IDLabel.
-  wdt:P18 rdfs:label ?p18IDLabel.
-  rdfs:label rdfs:label "имеет ярлык".
+    wdt:P31 schema:description ?p31IDDescription.
 
   }
   WHERE {
     BIND(wd:Q3305213 AS ?instancePainting)
-    
     ?p31ID wikibase:directClaim wdt:P31.
     ?p135ID wikibase:directClaim wdt:P135.
     ?p571ID wikibase:directClaim wdt:P571.
     ?p170ID wikibase:directClaim wdt:P170.
     ?p18ID wikibase:directClaim wdt:P18.
-    
+    ?p27ID wikibase:directClaim wdt:P27.
     ?painting wdt:P31 wd:Q3305213;
       wdt:P135 ?movement;
       wdt:P571 ?inception;
       wdt:P170 ?creator;
       wdt:P18 ?image;
       wikibase:sitelinks ?sitelinks.
+    ?creator wdt:P27 ?country.
     ?russianWikipediaLink schema:about ?painting;
       schema:isPartOf <https://ru.wikipedia.org/>.
     SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
   }
   ORDER BY DESC (?sitelinks)
   LIMIT 100
+concepts:
+  - painting

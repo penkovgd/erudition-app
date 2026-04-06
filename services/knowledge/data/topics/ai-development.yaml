@@ -1,0 +1,43 @@
+name: "Развитие искусственного интеллекта"
+slug: "ai-development"
+description: "Современные модели ИИ, компании-разработчики и прорывы"
+sparql: |
+  CONSTRUCT {
+  ?model wdt:P31 ?instanceClass.
+  ?model rdfs:label ?modelLabel.
+  ?model wdt:P178 ?developer.
+  ?model wdt:P144 ?basedOn.
+  ?model wdt:P571 ?inception.
+  ?developer rdfs:label ?developerLabel.
+  ?basedOn rdfs:label ?basedOnLabel.
+  ?instanceClass rdfs:label ?instanceClassLabel.
+  wdt:P31 rdfs:label ?p31IDLabel.
+  wdt:P178 rdfs:label ?p178IDLabel.
+  wdt:P144 rdfs:label ?p144IDLabel.
+  wdt:P571 rdfs:label ?p571IDLabel.
+  }
+  WHERE {
+    ?p31ID wikibase:directClaim wdt:P31.
+    ?p178ID wikibase:directClaim wdt:P178.
+    ?p144ID wikibase:directClaim wdt:P144.
+    ?p571ID wikibase:directClaim wdt:P571.
+    VALUES ?instanceClass {
+      wd:Q115305900
+      
+    }
+    ?model wdt:P31 ?instanceClass;
+      wdt:P178 ?developer;
+      wikibase:sitelinks ?sitelinks.
+    OPTIONAL { ?model wdt:P571 ?inception. }
+    OPTIONAL { ?model wdt:P144 ?basedOn. }
+    ?russianWikipediaLink schema:about ?model;
+      schema:isPartOf <https://ru.wikipedia.org/>.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
+  }
+  ORDER BY DESC (?sitelinks)
+  LIMIT 30
+
+concepts:
+  - programming
+  - global
+  - 21st_century

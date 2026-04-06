@@ -1,0 +1,10 @@
+name: "Объекты Солнечной системы"
+slug: "solar-system-objects"
+description: "Планеты, их спутники и другие объекты Солнечной системы"
+sparql: ""
+
+concepts:
+  - astronomy
+  - space
+  - global_time
+

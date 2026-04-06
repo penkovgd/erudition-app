@@ -1,0 +1,11 @@
+name: "Оружие и военная техника Второй мировой войны"
+slug: "ww2-military-tech"
+description: "Танки, самолеты и инженерия эпохи Второй мировой"
+sparql: ""
+
+concepts:
+  - history
+  - it
+  - global
+  - 20th_century
+

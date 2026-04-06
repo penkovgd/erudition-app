@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: services/knowledge/Dockerfile
     ports:
-      - "50051:50051"
+      - "8081:8081"
     environment:
       # - GRPC_HOST=0.0.0.0
       - GRPC_PORT=50051
@@ -17,6 +17,22 @@ services:
       - neo4j
     restart: unless-stopped
 
+  questions:
+    image: erudition-app-questions:latest
+    build:
+      context: .
+      dockerfile: services/questions/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - services/questions/.env
+    environment:
+      - NEO4J_URI=neo4j://neo4j:7687
+      - PG_DSN=postgresql://postgres:postgres@postgres:5432/questions?sslmode=disable
+    depends_on:
+      - postgres
+      - neo4j
+    restart: unless-stopped
   neo4j:
     image: erudition-app-neo4j:latest
     build:
@@ -41,6 +57,26 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: questions
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres
   
   # neo4j_init:
   #   image: erudition-app-neo4j_init:latest
@@ -59,6 +95,7 @@ services:
 
 volumes:
   neo4j:
+  postgres:
 
 secrets:
   neo4j_auth_file:

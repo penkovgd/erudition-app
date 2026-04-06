@@ -1,0 +1,10 @@
+name: "Советский кинематограф"
+slug: "soviet-cinema"
+description: "Культовые режиссеры и фильмы советского кинематографа"
+sparql: ""
+
+concepts:
+  - cinema
+  - ussr
+  - 20th_century
+

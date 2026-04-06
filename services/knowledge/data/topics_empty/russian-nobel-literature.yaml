@@ -1,0 +1,11 @@
+name: "Нобелевские премии по литературе (Русские писатели)"
+slug: "russian-nobel-literature"
+description: "Русские авторы, получившие Нобелевскую премию, и их произведения"
+sparql: ""
+
+concepts:
+  - literature
+  - russia
+  - ussr
+  - 20th_century
+

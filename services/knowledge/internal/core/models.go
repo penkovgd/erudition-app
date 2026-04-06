@@ -23,10 +23,47 @@ type Object struct {
 // JSONLD is a type for json-ld rdf data
 type JSONLD []byte
 
-// Topic represents named subgraph to be extracted and loaded into the knowledge graph. Contains metadata and a SPARQL query to fetch the data.
+// Topic represents the topic for the quiz.
 type Topic struct {
-	Name        string
-	Slug        string
-	Description string
-	SPARQL      string
+	Name        string   `json:"name"`
+	Slug        string   `json:"slug"`
+	Description string   `json:"description"`
+	SPARQL      string   `json:"-"`
+	Concepts    []string `json:"concepts"`
+}
+
+// ConceptScheme represents the facet (dimension) of the classification.
+type ConceptScheme struct {
+	ID        string
+	PrefLabel string
+}
+
+// Concept represents a specific item inside a facet.
+type Concept struct {
+	ID        string
+	PrefLabel string
+	InScheme  string   // ID of parent ConceptScheme
+	Broader   []string // ID of more general concepts (parents)
+	Related   []string // ID of related concepts
+}
+
+// SKOSData container for all the concepts and concept schemes in the knowledge graph, used for quiz generation
+type SKOSData struct {
+	Schemes  []ConceptScheme
+	Concepts []Concept
+}
+
+// SKOSTreeNode представляет узел в дереве фасета для фронтенда
+type SKOSTreeNode struct {
+	ID       string          `json:"id"`
+	Label    string          `json:"label"`
+	Children []*SKOSTreeNode `json:"children,omitempty"`
+	Related  []string        `json:"related,omitempty"`
+}
+
+// SKOSFacet представляет корневой фасет со списком деревьев
+type SKOSFacet struct {
+	ID       string          `json:"id"`
+	Label    string          `json:"label"`
+	Concepts []*SKOSTreeNode `json:"concepts"`
 }

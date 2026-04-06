@@ -1,0 +1,13 @@
+name: "Президенты США"
+slug: "us-presidents"
+description: "Штаты рождения, партии и годы президентства в США"
+sparql: ""
+
+concepts:
+  - history
+  - usa
+  - 18th_century
+  - 19th_century
+  - 20th_century
+  - 21st_century
+

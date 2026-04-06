@@ -1,0 +1,10 @@
+name: "Астрономические знания древних египтян"
+slug: "ancient-egypt-astronomy"
+description: "Календари, наблюдения за звездами и наука Древнего Египта"
+sparql: ""
+
+concepts:
+  - astronomy
+  - egypt
+  - antiquity
+

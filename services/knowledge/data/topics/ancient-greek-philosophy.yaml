@@ -1,0 +1,56 @@
+name: "Древнегреческая философия"
+slug: "ancient-greek-philosophy"
+description: "Школы и великие мыслители Древней Греции"
+sparql: |
+  CONSTRUCT {
+  ?philosopher wdt:P31 wd:Q5.
+  ?philosopher rdfs:label ?philosopherLabel.
+  ?philosopher wdt:P1066 ?teacher.
+  ?philosopher wdt:P135 ?school.
+  ?philosopher wdt:P800 ?work.
+  ?teacher rdfs:label ?teacherLabel.
+  ?school rdfs:label ?schoolLabel.
+  ?school wdt:P112 ?founder.
+  ?founder rdfs:label ?founderLabel.
+  ?work rdfs:label ?workLabel.
+  ?work wdt:P921 ?subject.
+  ?subject rdfs:label ?subjectLabel.
+  ?instanceHuman rdfs:label ?instanceHumanLabel.
+  wdt:P31 rdfs:label ?p31IDLabel.
+  wdt:P1066 rdfs:label ?p1066IDLabel.
+  wdt:P135 rdfs:label ?p135IDLabel.
+  wdt:P112 rdfs:label ?p112IDLabel.
+  wdt:P800 rdfs:label ?p800IDLabel.
+  wdt:P921 rdfs:label ?p921IDLabel.
+  }
+  WHERE {
+    BIND(wd:Q5 AS ?instanceHuman)
+    ?p31ID wikibase:directClaim wdt:P31.
+    ?p1066ID wikibase:directClaim wdt:P1066.
+    ?p135ID wikibase:directClaim wdt:P135.
+    ?p112ID wikibase:directClaim wdt:P112.
+    ?p800ID wikibase:directClaim wdt:P800.
+    ?p921ID wikibase:directClaim wdt:P921.
+    ?philosopher wdt:P31 wd:Q5;
+      (wdt:P106/(wdt:P279*)) wd:Q4964182;
+      wdt:P1412 wd:Q35497;
+      wikibase:sitelinks ?sitelinks.
+    OPTIONAL { ?philosopher wdt:P1066 ?teacher. }
+    OPTIONAL {
+      ?philosopher wdt:P135 ?school.
+      OPTIONAL { ?school wdt:P112 ?founder. }
+    }
+    OPTIONAL {
+      ?philosopher wdt:P800 ?work.
+      OPTIONAL { ?work wdt:P921 ?subject. }
+    }
+    ?russianWikipediaLink schema:about ?philosopher;
+      schema:isPartOf <https://ru.wikipedia.org/>.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
+  }
+  ORDER BY DESC (?sitelinks)
+  LIMIT 40
+concepts:
+  - philosophy
+  - greece
+  - antiquity

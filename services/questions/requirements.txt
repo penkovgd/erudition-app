@@ -1,0 +1,11 @@
+langchain
+langchain_neo4j
+fastapi[standard]
+neo4j
+pydantic-settings
+yandex-ai-studio-sdk[langchain]
+yandexcloud
+pytest
+asyncpg
+python-dotenv
+langchain-community

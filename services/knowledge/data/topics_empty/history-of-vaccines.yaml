@@ -1,0 +1,11 @@
+name: "История создания вакцин"
+slug: "history-of-vaccines"
+description: "Ученые-иммунологи и болезни, которые они победили"
+sparql: ""
+
+concepts:
+  - medicine
+  - global
+  - 19th_century
+  - 20th_century
+

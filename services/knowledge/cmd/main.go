@@ -7,8 +7,13 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/penkovgd/erudition-app/pkg/logger"
+	_ "github.com/penkovgd/erudition-app/services/knowledge/docs"
+	"github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/httpserver"
 	neo4jAdapter "github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/neo4j"
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/wdqs"
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/adapters/yamlload"
@@ -16,55 +21,82 @@ import (
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/core/services"
 )
 
+// @title           Knowledge API
+// @version         1.0
+// @description     API микросервиса knowledge для работы с графом знаний (деревья SKOS и топики).
+// @BasePath        /
 func main() {
 	cfg := config.MustLoad()
 	log := logger.New(cfg.LogLevel)
 	if err := run(cfg, log); err != nil {
-		log.Error("server failed", "error", err)
+		log.Error("service stopped with error", "error", err)
 		os.Exit(1)
 	}
 }
 
 func run(cfg config.Config, log *slog.Logger) error {
-	log.Info("starting server")
+	log.Info("starting knowledge service")
 	log.Debug("debug messages are enabled")
 
-	ctx := context.Background()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	// Neo4j Client
 	neo4j, err := neo4jAdapter.New(ctx, log, cfg.Neo4j.URI, cfg.Neo4j.Username, cfg.Neo4j.Password)
 	if err != nil {
 		return fmt.Errorf("create neo4j client: %w", err)
 	}
-	defer neo4j.Close(ctx)
+	defer neo4j.Close(context.Background())
 
 	// Wikidata http client
-	wdqs, err := wdqs.New(log)
+	wdqsClient, err := wdqs.New(log)
 	if err != nil {
 		return fmt.Errorf("create wikidata http client: %w", err)
 	}
 
 	// ETL
-	etl, err := services.NewETL(log, wdqs, neo4j)
+	etl, err := services.NewETL(log, wdqsClient, neo4j)
 	if err != nil {
 		return fmt.Errorf("create ETL service: %w", err)
 	}
 
-	// Topic Provider
+	skosProvider := yamlload.NewSKOSYAMLLoader(log)
 	topicProvider := yamlload.NewTopicYAMLLoader(log)
 
 	// Topic Syncer
-	syncer, err := services.NewTopicSyncer(log, topicProvider, neo4j, etl)
+	syncer, err := services.NewTopicSyncer(
+		log,
+		skosProvider, neo4j,
+		topicProvider, neo4j,
+		etl,
+	)
 	if err != nil {
 		return fmt.Errorf("create topic syncer: %w", err)
 	}
 
-	// Sync topics
-	if err := syncer.Sync(ctx); err != nil {
-		return fmt.Errorf("sync topics: %w", err)
-	}
+	httpServer := httpserver.NewServer(log, ":8081", neo4j, neo4j, syncer)
+	serverErrors := make(chan error, 1)
+	go func() {
+		serverErrors <- httpServer.Start()
+	}()
 
-	log.Info("topics synced successfully")
+	select {
+	case err := <-serverErrors:
+		return fmt.Errorf("server error: %w", err)
+	case <-ctx.Done():
+		log.Info("shutdown signal received")
+
+		// Контекст с таймаутом для плавного завершения
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := httpServer.Stop(shutdownCtx); err != nil {
+			log.Error("graceful shutdown failed", "error", err)
+			return err
+		}
+
+		log.Info("server stopped gracefully")
+	}
 
 	return nil
 

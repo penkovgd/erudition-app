@@ -1,0 +1,196 @@
+schemes:
+  geography:
+    prefLabel: "Место"
+  time:
+    prefLabel: "Время"
+  domain:
+    prefLabel: "Область знаний"
+
+concepts:
+  # ==========================================
+  # ФАСЕТ: ОБЛАСТЬ ЗНАНИЙ (DOMAIN)
+  # ==========================================
+  # --- Гуманитарные и социальные ---
+  humanities:
+    prefLabel: "Гуманитарные науки"
+    inScheme: domain
+  history:
+    prefLabel: "История"
+    inScheme: domain
+    broader: [humanities]
+  philosophy:
+    prefLabel: "Философия"
+    inScheme: domain
+    broader: [humanities]
+  mythology:
+    prefLabel: "Мифология"
+    inScheme: domain
+    broader: [humanities]
+
+  # --- Искусство и культура ---
+  art:
+    prefLabel: "Искусство"
+    inScheme: domain
+  painting:
+    prefLabel: "Живопись"
+    inScheme: domain
+    broader: [art]
+  literature:
+    prefLabel: "Литература"
+    inScheme: domain
+    broader: [art]
+  architecture:
+    prefLabel: "Архитектура"
+    inScheme: domain
+    broader: [art]
+  cinema:
+    prefLabel: "Кинематограф"
+    inScheme: domain
+    broader: [art]
+  music:
+    prefLabel: "Музыка"
+    inScheme: domain
+    broader: [art]
+
+  # --- Естественные науки ---
+  science:
+    prefLabel: "Естественные науки"
+    inScheme: domain
+  physics:
+    prefLabel: "Физика"
+    inScheme: domain
+    broader: [science]
+  biology:
+    prefLabel: "Биология"
+    inScheme: domain
+    broader: [science]
+  astronomy:
+    prefLabel: "Астрономия"
+    inScheme: domain
+    broader: [science]
+  chemistry:
+    prefLabel: "Химия"
+    inScheme: domain
+    broader: [science]
+  medicine:
+    prefLabel: "Медицина"
+    inScheme: domain
+    broader: [science]
+
+  # --- Формальные науки и IT ---
+  math:
+    prefLabel: "Математика"
+    inScheme: domain
+  it:
+    prefLabel: "Информационные технологии"
+    inScheme: domain
+  computer_networks:
+    prefLabel: "Компьютерные сети"
+    inScheme: domain
+    broader: [it]
+  programming:
+    prefLabel: "Программирование"
+    inScheme: domain
+    broader: [it]
+
+  # ==========================================
+  # ФАСЕТ: ВРЕМЯ (TIME)
+  # ==========================================
+  prehistoric:
+    prefLabel: "Доисторическая эпоха"
+    inScheme: time
+  antiquity:
+    prefLabel: "Античность"
+    inScheme: time
+  middle_ages:
+    prefLabel: "Средние века"
+    inScheme: time
+  renaissance:
+    prefLabel: "Эпоха Возрождения"
+    inScheme: time
+  18th_century:
+    prefLabel: "18-й век"
+    inScheme: time
+  19th_century:
+    prefLabel: "19-й век"
+    inScheme: time
+  20th_century:
+    prefLabel: "20-й век"
+    inScheme: time
+  21st_century:
+    prefLabel: "21-й век"
+    inScheme: time
+  global_time:
+    prefLabel: "Вне времени / Все эпохи"
+    inScheme: time
+
+  # ==========================================
+  # ФАСЕТ: МЕСТО (GEOGRAPHY)
+  # ==========================================
+  global:
+    prefLabel: "Весь мир"
+    inScheme: geography
+  space:
+    prefLabel: "Космос"
+    inScheme: geography
+    
+  europe:
+    prefLabel: "Европа"
+    inScheme: geography
+  italy:
+    prefLabel: "Италия"
+    inScheme: geography
+    broader: [europe]
+  greece:
+    prefLabel: "Греция"
+    inScheme: geography
+    broader: [europe]
+  france:
+    prefLabel: "Франция"
+    inScheme: geography
+    broader: [europe]
+  uk:
+    prefLabel: "Великобритания"
+    inScheme: geography
+    broader: [europe]
+  germany:
+    prefLabel: "Германия"
+    inScheme: geography
+    broader: [europe]
+    
+  russia:
+    prefLabel: "Россия"
+    inScheme: geography
+    related: [ussr]
+  ussr:
+    prefLabel: "СССР"
+    inScheme: geography
+    related: [russia]
+
+  americas:
+    prefLabel: "Америка"
+    inScheme: geography
+  usa:
+    prefLabel: "США"
+    inScheme: geography
+    broader: [americas]
+
+  asia:
+    prefLabel: "Азия"
+    inScheme: geography
+  japan:
+    prefLabel: "Япония"
+    inScheme: geography
+    broader: [asia]
+  china:
+    prefLabel: "Китай"
+    inScheme: geography
+    broader: [asia]
+
+  africa:
+    prefLabel: "Африка"
+    inScheme: geography
+  egypt:
+    prefLabel: "Египет"
+    inScheme: geography
+    broader: [africa]

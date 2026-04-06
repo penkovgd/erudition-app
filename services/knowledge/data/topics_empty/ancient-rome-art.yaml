@@ -1,0 +1,10 @@
+name: "Монументальное искусство Древнего Рима"
+slug: "ancient-rome-art"
+description: "Скульптура, фрески и архитектурные памятники Римской Империи"
+sparql: ""
+
+concepts:
+  - architecture
+  - art
+  - italy
+  - antiquity

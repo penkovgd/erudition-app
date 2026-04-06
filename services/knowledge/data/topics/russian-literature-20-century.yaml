@@ -19,7 +19,6 @@ sparql: |
     wdt:P136 rdfs:label ?p136IDLabel.
     wdt:P571 rdfs:label ?p571IDLabel.
     wdt:P407 rdfs:label ?p407IDLabel.
-    rdfs:label rdfs:label "имеет ярлык".
   }
   WHERE {
     BIND(wd:Q7725634 AS ?instanceBook)
@@ -42,3 +41,9 @@ sparql: |
   }
   ORDER BY DESC (?sitelinks)
   LIMIT 30
+
+concepts:
+  - literature
+  - russia
+  - ussr
+  - 20th_century

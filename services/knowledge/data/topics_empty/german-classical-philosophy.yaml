@@ -1,0 +1,12 @@
+name: "Немецкая классическая философия"
+slug: "german-classical-philosophy"
+description: "Идеи и труды Канта, Гегеля и других немецких мыслителей"
+sparql: ""
+
+concepts:
+  - philosophy
+  - germany
+  - 18th_century
+  - 19th_century
+
+

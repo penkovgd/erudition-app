@@ -1,0 +1,10 @@
+name: "Динозавры Северной Америки"
+slug: "north-american-dinosaurs"
+description: "Виды динозавров, обитавших на территории Северной Америки"
+sparql: ""
+
+concepts:
+  - biology
+  - usa
+  - prehistoric
+

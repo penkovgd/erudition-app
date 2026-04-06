@@ -1,0 +1,11 @@
+name: "Создатели операционных систем"
+slug: "os-creators"
+description: "История создания UNIX, Linux, Windows и других ОС"
+sparql: ""
+
+concepts:
+  - it
+  - usa
+  - europe
+  - 20th_century
+

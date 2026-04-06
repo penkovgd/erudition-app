@@ -11,7 +11,7 @@ import (
 	"runtime"
 
 	"github.com/penkovgd/erudition-app/services/knowledge/internal/core"
-	"github.com/stretchr/testify/assert/yaml"
+	"gopkg.in/yaml.v3"
 )
 
 // TopicYAMLLoader is a file-based loader for quiz topics
@@ -43,10 +43,11 @@ func findDataDir() string {
 }
 
 type topicYAML struct {
-	Name        string `yaml:"name"`
-	Slug        string `yaml:"slug"`
-	Description string `yaml:"description"`
-	SPARQL      string `yaml:"sparql"`
+	Name        string   `yaml:"name"`
+	Slug        string   `yaml:"slug"`
+	Description string   `yaml:"description"`
+	SPARQL      string   `yaml:"sparql"`
+	Concepts    []string `yaml:"concepts"`
 }
 
 // GetAll loads all topics from the data/topics directory
@@ -80,6 +81,7 @@ func (r *TopicYAMLLoader) GetAll(_ context.Context) ([]core.Topic, error) {
 			Slug:        topic.Slug,
 			Description: topic.Description,
 			SPARQL:      topic.SPARQL,
+			Concepts:    topic.Concepts,
 		})
 	}
 

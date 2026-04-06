@@ -1,0 +1,10 @@
+name: "Битвы Второй мировой войны"
+slug: "ww2-battles"
+description: "Ключевые сражения, даты и участники Второй мировой войны"
+sparql: ""
+
+concepts:
+  - history
+  - global
+  - 20th_century
+

@@ -1,0 +1,11 @@
+name: "Математики Древней Греции"
+slug: "ancient-greek-mathematicians"
+description: "Труды Евклида, Пифагора, Архимеда и других ученых"
+sparql: ""
+
+concepts:
+  - math
+  - greece
+  - antiquity
+
+

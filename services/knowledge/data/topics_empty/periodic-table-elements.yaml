@@ -1,0 +1,10 @@
+name: "Химические элементы"
+slug: "periodic-table-elements"
+description: "Свойства химических элементов периодической таблицы"
+sparql: ""
+
+concepts:
+  - chemistry
+  - global
+  - global_time
+

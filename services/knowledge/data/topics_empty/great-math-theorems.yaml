@@ -1,0 +1,12 @@
+name: "Великие теоремы математики"
+slug: "great-math-theorems"
+description: "Знаменитые теоремы, их авторы и суть доказательств"
+sparql: ""
+
+concepts:
+  - math
+  - global
+  - antiquity
+  - 19th_century
+  - 20th_century
+

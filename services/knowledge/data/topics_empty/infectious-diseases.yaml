@@ -1,0 +1,10 @@
+name: "Инфекционные заболевания и их возбудители"
+slug: "infectious-diseases"
+description: "Болезни, вирусы, бактерии и способы передачи"
+sparql: ""
+
+concepts:
+  - medicine
+  - global
+  - global_time
+

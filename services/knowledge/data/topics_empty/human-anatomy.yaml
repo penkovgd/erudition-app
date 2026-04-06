@@ -1,0 +1,10 @@
+name: "Анатомия человека"
+slug: "human-anatomy"
+description: "Органы, системы и строение человеческого тела"
+sparql: ""
+
+concepts:
+  - biology
+  - global
+  - global_time
+

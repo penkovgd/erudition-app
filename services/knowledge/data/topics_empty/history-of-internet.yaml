@@ -1,0 +1,11 @@
+name: "История Интернета и протоколы"
+slug: "history-of-internet"
+description: "Развитие сетей от ARPANET до современной паутины"
+sparql: ""
+
+concepts:
+  - computer_networks
+  - usa
+  - europe
+  - 20th_century
+

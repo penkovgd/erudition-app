@@ -1,0 +1,11 @@
+name: "Римские императоры"
+slug: "roman-emperors"
+description: "Династии, годы правления и факты о римских императорах"
+sparql: ""
+
+concepts:
+  - history
+  - italy
+  - europe
+  - antiquity
+

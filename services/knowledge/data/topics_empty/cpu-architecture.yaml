@@ -1,0 +1,11 @@
+name: "Архитектура процессоров"
+slug: "cpu-architecture"
+description: "Развитие процессорных архитектур (x86, ARM) и их создатели"
+sparql: ""
+
+concepts:
+  - it
+  - global
+  - 20th_century
+  - 21st_century
+

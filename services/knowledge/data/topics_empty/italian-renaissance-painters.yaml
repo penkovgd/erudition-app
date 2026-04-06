@@ -1,0 +1,10 @@
+name: "Итальянские художники эпохи Возрождения"
+slug: "italian-renaissance-painters"
+description: "Знаменитые художники и их шедевры в Италии эпохи Возрождения"
+sparql: ""
+
+concepts:
+  - painting
+  - italy
+  - renaissance
+

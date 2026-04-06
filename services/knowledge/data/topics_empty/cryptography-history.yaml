@@ -1,0 +1,11 @@
+name: "Алгоритмы шифрования и криптография"
+slug: "cryptography-history"
+description: "Развитие шифров от Энигмы до алгоритма RSA"
+sparql: ""
+
+concepts:
+  - math
+  - it
+  - global
+  - 20th_century
+
